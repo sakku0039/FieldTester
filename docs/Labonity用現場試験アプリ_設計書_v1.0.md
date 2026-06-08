@@ -67,8 +67,8 @@
 
 ## 2. 設計方針
 
-- 現場試験アプリは、出荷予定・出荷実績を選び、`FieldTestSession` を作成または再開して現場試験記録を保存する PWA とする。
-- フレッシュ試験の現場実測値は、初期リリースでは `FieldFreshTestStaging` に保存する。これは TP 正本ではなく、デスクトップ TP アアプリが取り込むための一次記録である。
+- 現場試験アプリは、出荷予定・出荷実績を選び、`FieldTestSession` を作成または再開して現場試験記録を保存するウェブアプリケーションとする。
+- フレッシュ試験の現場実測値は、 `FieldFreshTestStaging` に保存する。これは TP 正本ではなく、デスクトップ TP アプリが取り込むための一次記録である。
 - TP 採取対象の業務判定、TP 採取データの正式作成、供試体セット・ピース初期構成、帳票連携は、原則としてデスクトップアプリ / 出荷管理 / Ex3010 / TP アプリ側の責務（基幹システム側）とする。
 - Web 側は、出荷実績別の現場一次記録（フレッシュ試験値、黒板スナップショット、写真）を保存する。TPデータはクラウド上には一切同期されないため、現場アプリ（Web）側で供試体情報の確認・修正やTPデータの直接照合は行わない。
 - `FreshTestResults` / `FreshTestGroup` は正本テーブルとして作成しない。`FieldFreshTestStaging` も正本ではなく、`import_status` によって正式 TP への取込状態を管理する。
@@ -82,18 +82,18 @@
 ```mermaid
 flowchart TD
     subgraph 現場試験アプリ ["現場試験アプリ (Web/Cloud)"]
-        A[出荷予定一覧] --> B[出荷実績一覧]
-        B --> C[現場試験記録を作成/再開]
-        C --> G[フレッシュ試験入力]
-        G --> H[黒板確認]
-        H --> I[写真撮影・保存]
-        I --> J[現場記録送信]
+        A["出荷予定一覧"] --> B["出荷実績一覧"]
+        B --> C["現場試験記録を作成/再開"]
+        C --> G["フレッシュ試験入力"]
+        G --> H["黒板データ編集 (必要に応じて)"]
+        H --> I["黒板を合成した写真の撮影・保存"]
+        I --> J["現場記録の確定・保存"]
     end
 
     subgraph 基幹システム ["基幹システム (Desktop/Local)"]
-        J --> K[同期Agentによる現場記録のローカル同期]
-        K --> L[基幹TPアプリで現場記録の取込処理実行]
-        L --> M[基幹側でのTPデータの作成/特定とフレッシュ試験結果・黒板・写真の正式反映]
+        J --> K["同期Agentによる現場一次記録(Staging)のローカル同期"]
+        K --> L["基幹TPアプリでローカル同期された一次記録から取り込む"]
+        L --> M["正式TPデータへのフレッシュ試験結果・黒板・写真の反映"]
     end
 ```
 
@@ -101,9 +101,8 @@ flowchart TD
 
 | 領域 | 責務 | 主なデータ |
 |---|---|---|
-| 現場試験アプリ | 出荷実績別の現場一次記録を保存する。フレッシュ試験値、黒板、写真、メモ、送信状態を管理する。TP 正本を直接作らない。 | `FieldTestSession` / `FieldFreshTestStaging` / `PhotoAsset` / `BlackboardInstance` |
+| 現場試験アプリ | 出荷実績別の現場一次記録を保存する。フレッシュ試験値、黒板、写真、メモ、確定・取込状態を管理する。TP 正本を直接作らない。 | `FieldTestSession` / `FieldFreshTestStaging` / `PhotoAsset` / `BlackboardInstance` |
 | デスクトップ TP アプリ | 現場一次記録を確認し、既存 TP へ取込、または TP データを正式作成して取込する。競合解決と帳票連携を担当する。 | `TestPieceSaisyu_Main` / `FreshSiken` / `Set` / `Piece` / `SyukkaData` |
-| 出荷管理 / 出荷指令 | 出荷実績本体、工程検査、TP 対象フラグ、TP 自動登録 ON/OFF、出荷実績時点の判定を管理する。 | `SyukkaDataMain` / `SyukkaData_TpSaisyu` |
 | Sync Agent | ローカル→クラウド同期、クラウド→ローカル取込候補の取得、ACK、冪等性、競合状態を管理する。 | `ExternalIdMapping` / `source_hash` / `OutboxEvent` / `SyncLog` |
 
 ### 2.2 現場・基幹連携業務フロー
@@ -111,65 +110,66 @@ flowchart TD
 ```mermaid
 flowchart TD
     subgraph 現場アプリ["現場フレッシュ試験アプリ"]
-        A([開始]) --> B[出荷予定一覧を確認]
-        B --> C[出荷予定を選択]
-        C --> D[出荷実績一覧を確認]
-        D --> E[出荷実績を選択]
-        E --> F[フレッシュ試験を開始または再開]
-        F --> G[フレッシュ試験値を入力]
-        G --> H[黒板データを修正・編集]
-        H --> I[黒板合成で写真を撮影・複数枚保存]
-        I --> J[フレッシュ試験データを保存・確定]
+        A([開始]) --> B["出荷予定一覧を確認"]
+        B --> C["出荷予定を選択"]
+        C --> D["出荷実績一覧を確認"]
+        D --> E["出荷実績を選択"]
+        E --> F["フレッシュ試験を開始または再開"]
+        F --> G["フレッシュ試験値を入力"]
+        G --> H["黒板データ編集 (必要に応じて)"]
+        H --> I["黒板を合成した写真の撮影・複数枚保存"]
+        I --> J["現場一次記録を確定・保存"]
     end
 
     subgraph 基幹システム["基幹TPアプリ"]
-        M[基幹TPアプリでTPデータを作成]
-        M --> N[作成したTPデータへフレッシュ試験値を取込]
-        N --> O([完了])
+        K["同期Agentによる現場一次記録(Staging)のローカル同期"]
+        K --> L["基幹TPアプリで同期されたフレッシュ一次テーブルから取り込む"]
+        L --> M["正式TPデータへの反映 (必要に応じてTPを新規作成)"]
+        M --> N([完了])
     end
 
-    J --> M
+    J --> K
 ```
 
 ### 2.3 ユースケース図
 
 ```mermaid
 flowchart LR
-    現場担当者((現場担当者))
-    事務所担当者((事務所・品質担当者))
+    FieldOperator((現場担当者))
+    OfficeOperator((事務所・品質担当者))
 
     subgraph 現場アプリ["現場フレッシュ試験アプリ"]
         UC1([出荷予定を選択])
         UC2([出荷実績を選択])
         UC3([フレッシュ試験を開始・再開])
         UC4([フレッシュ試験値を入力])
-        UC5([黒板データを修正・編集])
-        UC6([黒板合成で写真を撮影・保存])
-        UC7([フレッシュ試験データを確定])
+        UC5([黒板データ編集・調整])
+        UC6([黒板を合成した写真の撮影・保存])
+        UC7([現場一次記録を確定・保存])
         UC8([取込結果を確認])
     end
 
     subgraph 基幹アプリ["基幹TPアプリ"]
         TP2([TPデータを作成])
-        TP3([フレッシュ試験値を取込])
+        TP3([同期された一次記録テーブルから値・写真を取込])
         TP4([再取込時の差分警告を確認])
     end
 
-    現場担当者 --- UC1
-    現場担当者 --- UC2
-    現場担当者 --- UC3
-    現場担当者 --- UC4
-    現場担当者 --- UC5
-    現場担当者 --- UC6
-    現場担当者 --- UC7
-    現場担当者 --- UC8
+    FieldOperator --- UC1
+    FieldOperator --- UC2
+    FieldOperator --- UC3
+    FieldOperator --- UC4
+    FieldOperator --- UC5
+    FieldOperator --- UC6
+    FieldOperator --- UC7
+    FieldOperator --- UC8
 
-    事務所担当者 --- TP2
-    事務所担当者 --- TP3
-    事務所担当者 --- TP4
+    OfficeOperator --- TP2
+    OfficeOperator --- TP3
+    OfficeOperator --- TP4
 
-    UC7 -.確定後に基幹側で取込可能.-> TP3
-    TP3 -.取込結果.-> UC8
+    UC7 -.->|確定・保存後に同期・取込可能| TP3
+    TP3 -.->|取込結果| UC8
 ```
 
 ---
@@ -225,17 +225,17 @@ flowchart LR
 | 3 | 現場試験記録 作成/再開 | `FieldTestSession` を作成。既存未送信・未取込記録があれば再開。 | 現場試験アプリ |
 | 4 | 送信・取込状況表示 | 下書き、送信済み、取込完了、競合等のステータスを表示する。 | 現場試験アプリ |
 | 5 | フレッシュ試験入力 | `renban` 別に実測値を入力。`changedFields` / `clearedFields` 適用。 | 現場試験アプリ |
-| 6 | 黒板確認 | `KokubanLayout` を読み取り、現場値を差し込みプレビュー。 | 現場試験アプリ |
-| 7 | 写真撮影・保存 | 1 つのフレッシュ記録に複数枚の写真を保存。`PhotoAssetTarget` N 件。 | 現場試験アプリ |
-| 8 | 現場記録送信 | `FieldTestSession` を `submitted` にする。通信断時は IndexedDB に保持。 | 現場試験アプリ |
-| 9 | デスクトップ取込 | 未取込一覧から正式 TP へ反映。既存 TP へ取込 / TP 作成して取込 / 競合確認。 | 基幹システム |
+| 6 | 黒板データ編集 | `KokubanLayout` を読み取り、現場値を差し込んでプレビュー・調整・編集する。 | 現場試験アプリ |
+| 7 | 黒板合成写真撮影・保存 | 黒板を合成した写真や測定状況写真などを複数枚撮影・保存。`PhotoAssetTarget` N 件。 | 現場試験アプリ |
+| 8 | 現場記録の確定・保存 | `FieldTestSession` を `submitted` (確定・保存済み) にする。通信断時は端末内 (IndexedDB) に一時保存。 | 現場試験アプリ |
+| 9 | デスクトップ取込 | 同期された一次記録テーブルから、正式 TP へ反映（既存TPへ取込、または新規TP作成して取込）。 | 基幹システム |
 
 ### 送信・取込状況ステータス
 
 | 状態 | 意味 | 範囲 |
 |---|---|---|
 | `draft` | 一時保存中（端末内またはクラウド上で編集中） | 現場試験アプリ |
-| `submitted` | 送信済み（現場入力完了、デスクトップ取込待ち） | 現場試験アプリ |
+| `submitted` | 確定・保存済み（現場入力完了、デスクトップ取込待ち） | 現場試験アプリ |
 | `imported` | 基幹側で取込完了（正式 TP へ取込済み） | 基幹システム |
 | `conflict` | 取込時に同一項目の競合あり | 基幹システム |
 | `rejected` | 取込対象外として処理済み | 基幹システム |
@@ -245,21 +245,21 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    A[ログイン] --> B[出荷予定一覧]
-    B --> C[出荷予定詳細]
-    C --> D[出荷実績一覧]
-    D --> E[出荷実績選択]
-    E --> F[フレッシュ試験入力]
-    F --> G[黒板データ編集]
-    G --> H[黒板合成写真撮影]
-    H --> I[確定確認]
-    I --> J[確定完了・取込待ち]
-    J --> K[取込結果確認]
+    A["ログイン"] --> B["出荷予定一覧"]
+    B --> C["出荷予定詳細"]
+    C --> D["出荷実績一覧"]
+    D --> E["出荷実績選択"]
+    E --> F["フレッシュ試験入力"]
+    F --> G["黒板データ編集"]
+    G --> H["黒板合成写真の撮影・保存"]
+    H --> I["確定確認"]
+    I --> J["確定完了・取込待ち"]
+    J --> K["取込結果確認"]
 
-    F --> D戻る[出荷実績を選び直す]
-    D戻る --> D
-    H --> F戻る[入力画面へ戻る]
-    F戻る --> F
+    F --> D_back["出荷実績を選び直す"]
+    D_back --> D
+    H --> F_back["入力画面へ戻る"]
+    F_back --> F
 ```
 
 ---
@@ -288,16 +288,16 @@ flowchart TD
 
 ```mermaid
 stateDiagram-v2
-    [*] --> draft: 新規作成/編集開始
-    draft --> submitted: 現場で確定(送信)
-    draft --> voided: 現場で取消
-    submitted --> imported: 基幹側で取込完了
-    submitted --> conflict: 取込先に別値あり(競合)
-    submitted --> rejected: 取込対象外と判断
-    submitted --> voided: 取引中止等により取消
-    conflict --> imported: 差分確認後に承認・取込
-    conflict --> rejected: 取込しないと判断
-    imported --> superseded: 再測定等により後続記録に置換
+    [*] --> draft : "新規作成/編集開始"
+    draft --> submitted : "現場で確定・保存"
+    draft --> voided : "現場で取消"
+    submitted --> imported : "基幹側で取込完了"
+    submitted --> conflict : "取込先に別値あり(競合)"
+    submitted --> rejected : "取込対象外と判断"
+    submitted --> voided : "取引中止等により取消"
+    conflict --> imported : "差分確認後に承認・取込"
+    conflict --> rejected : "取込しないと判断"
+    imported --> superseded : "再測定等により後続記録に置換"
 ```
 
 | 状態 | 意味 |
@@ -392,37 +392,37 @@ stateDiagram-v2
 
 ```mermaid
 sequenceDiagram
-    actor 事務所担当者
-    participant 同期 as 同期エージェント
-    participant 現場DB as "現場アプリ独自DB (Cloud)"
-    participant 取込領域 as "基幹側取込領域 (Local Staging)"
-    participant 基幹アプリ as "基幹TPアプリ (Desktop)"
-    participant 基幹DB as 基幹品質DB
+    actor OfficeUser as 事務所担当者
+    participant SyncAgent as 同期エージェント
+    participant CloudDB as 現場アプリ独自DB (Cloud)
+    participant LocalStaging as 基幹側取込領域 (Local Staging)
+    participant DesktopApp as 基幹TPアプリ (Desktop)
+    participant CoreDB as 基幹品質DB
 
     rect rgb(245, 245, 245)
-        note over 同期,取込領域: 裏側の同期処理 (Sync Agent)
-        同期->>現場DB: 確定済み(submitted)現場記録を取得
-        現場DB-->>同期: FieldTestSession / FieldFreshTestStaging / 写真・黒板メタデータ
-        同期->>取込領域: 未取込データとして保存
+        note over SyncAgent,LocalStaging: 裏側の同期処理 (Sync Agent)
+        SyncAgent->>CloudDB: "確定・保存済み(submitted)現場一次記録を取得"
+        CloudDB-->>SyncAgent: "FieldTestSession / FieldFreshTestStaging / 写真・黒板メタデータ"
+        SyncAgent->>LocalStaging: "ローカルの一次記録テーブル(Staging)へ同期・保存"
     end
 
-    事務所担当者->>基幹アプリ: 未取込フレッシュ試験を開く
-    基幹アプリ->>取込領域: 未取込一覧を読込 (GET / candidates)
-    取込領域-->>基幹アプリ: 候補一覧を表示
-    事務所担当者->>基幹アプリ: 取込対象を選択
-    基幹アプリ->>基幹DB: TPデータを作成 (未作成の場合)
-    基幹アプリ->>基幹DB: 作成したTPデータへフレッシュ試験値を取込
+    OfficeUser->>DesktopApp: "未取込フレッシュ試験を開く"
+    DesktopApp->>LocalStaging: "ローカル同期された一次記録一覧を読込 (GET / candidates)"
+    LocalStaging-->>DesktopApp: "候補一覧を表示"
+    OfficeUser->>DesktopApp: "取込対象を選択"
+    DesktopApp->>CoreDB: "TPデータを作成 (未作成の場合)"
+    DesktopApp->>CoreDB: "同期された一次記録テーブルから値・写真を取込"
 
     alt 取込先に入力済みの別値がある場合
-        基幹アプリ-->>事務所担当者: 差分を表示して確認 (Conflict)
-        事務所担当者->>基幹アプリ: 採用する値を選択
-        基幹アプリ->>基幹DB: 確定値を保存
+        DesktopApp-->>OfficeUser: "差分を表示して確認 (Conflict)"
+        OfficeUser->>DesktopApp: "採用する値を選択"
+        DesktopApp->>CoreDB: "確定値を保存"
     else 差分確認が不要な場合
-        基幹アプリ->>基幹DB: そのまま保存
+        DesktopApp->>CoreDB: "そのまま保存"
     end
 
-    基幹アプリ->>取込領域: 取込結果・ステータスを保存
-    同期->>現場DB: 取込結果を反映 (imported / conflict / rejected)
+    DesktopApp->>LocalStaging: "取込結果・ステータスを保存"
+    SyncAgent->>CloudDB: "取込結果を反映 (imported / conflict / rejected)"
 ```
 
 ### 8.3 値競合・差分確認の例外処理方針
@@ -467,33 +467,33 @@ PATCH /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}/fresh-tests/{renban}
 
 ```mermaid
 sequenceDiagram
-    actor 現場担当者
-    participant 画面 as 現場アプリ画面
-    participant サーバー as 現場アプリサーバー
-    participant 独自DB as "現場アプリ独自DB (SQL / Cloud)"
-    participant 写真保管 as "写真保管領域 (Blob Storage)"
-    participant 黒板DB as 黒板レイアウトDB
+    actor FieldOperator as 現場担当者
+    participant AppUI as 現場アプリ画面
+    participant AppServer as 現場アプリサーバー
+    participant AppDB as 現場アプリ独自DB (SQL / Cloud)
+    participant BlobStorage as 写真保管領域 (Blob Storage)
+    participant BlackboardDB as 黒板レイアウトDB
 
-    現場担当者->>画面: 出荷予定を選択
-    現場担当者->>画面: 出荷実績を選択
-    画面->>サーバー: フレッシュ試験開始を依頼
-    サーバー->>独自DB: FieldTestSession 作成
-    現場担当者->>画面: フレッシュ試験値を入力
-    画面->>サーバー: 入力値を保存
-    サーバー->>独自DB: FieldFreshTestStaging 保存 (renban別)
-    現場担当者->>画面: 黒板データを修正・編集
-    画面->>サーバー: 黒板データ編集・プレビューを依頼
-    サーバー->>黒板DB: レイアウトを読取 (KokubanLayout)
-    サーバー->>独自DB: BlackboardInstance 保存 (スナップショット)
-    現場担当者->>画面: 黒板を合成しながら写真を撮影
-    画面->>サーバー: 写真アップロード準備を依頼 (SAS)
-    サーバー-->>画面: 一時アップロード先(SAS URL)を返す
-    画面->>写真保管: 写真を保存 (Blob PUT)
-    画面->>サーバー: 写真保存完了を通知 (Commit)
-    サーバー->>独自DB: PhotoAsset / PhotoAssetTarget 保存
-    現場担当者->>画面: データを確定 (送信)
-    画面->>サーバー: 現場記録送信を依頼
-    サーバー->>独自DB: FieldTestSession 状態を submitted に更新
+    FieldOperator->>AppUI: "出荷予定を選択"
+    FieldOperator->>AppUI: "出荷実績を選択"
+    AppUI->>AppServer: "フレッシュ試験開始を依頼"
+    AppServer->>AppDB: "FieldTestSession 作成"
+    FieldOperator->>AppUI: "フレッシュ試験値を入力"
+    AppUI->>AppServer: "入力値を保存"
+    AppServer->>AppDB: "FieldFreshTestStaging 保存 (renban別)"
+    FieldOperator->>AppUI: "黒板データ編集・調整 (必要に応じて)"
+    AppUI->>AppServer: "黒板データ編集・プレビューを依頼"
+    AppServer->>BlackboardDB: "レイアウトを読取 (KokubanLayout)"
+    AppServer->>AppDB: "BlackboardInstance 保存 (スナップショット)"
+    FieldOperator->>AppUI: "黒板を合成した写真を撮影"
+    AppUI->>AppServer: "写真アップロード準備を依頼 (SAS)"
+    AppServer-->>AppUI: "一時アップロード先(SAS URL)を返す"
+    AppUI->>BlobStorage: "写真を保存 (Blob PUT)"
+    AppUI->>AppServer: "写真保存完了を通知 (Commit)"
+    AppServer->>AppDB: "PhotoAsset / PhotoAssetTarget 保存"
+    FieldOperator->>AppUI: "現場一次記録を確定・保存"
+    AppUI->>AppServer: "現場記録の確定・保存を依頼"
+    AppServer->>AppDB: "FieldTestSession 状態を submitted (確定・保存済み) に更新"
 ```
 
 ---
@@ -555,7 +555,7 @@ FieldTestSession
 | upload-session 発行 | `PhotoUploadSession` を作成し、`original` / `composed` / `thumbnail` / `rendered_blackboard` 用の短時間 SAS を返す。 |
 | Blob PUT | ブラウザから Blob Storage へ直接アップロード。DB に Base64 保存しない。 |
 | commit | Blob 存在確認後に `PhotoAsset` / `PhotoAssetTarget` / `Overlay` を確定。冪等にする。 |
-| 通信断 | IndexedDB に未送信写真を保持し、再送可能にする。 |
+| 通信断 | IndexedDB に未確定の写真を一時保持し、通信復旧時に自動/手動で確定・commit できる。 |
 | 複数枚保存 | `FieldFreshTestStaging` 1 件に対して `PhotoAssetTarget` N 件を許可。 |
 | 取込後リンク | 正式 TP へ取込後、`linked_tp_sampling_id` によって参照を保持し、基幹システム側で写真を紐づけ可能にする。クラウドDB側にはTP正本テーブルは存在しない。 |
 
@@ -593,13 +593,13 @@ FieldFreshTestStaging(field_fresh_test_id = F-001)
 
 | 方向 | 方式 | 対象 |
 |---|---|---|
-| ローカル → クラウド | `ExternalIdMapping` + `source_hash` による冪等 Upsert | 出荷予定、出荷実績、TP 採取データ、黒板レイアウト |
+| ローカル → クラウド | `ExternalIdMapping` + `source_hash` による冪等 Upsert | 出荷予定、出荷実績、黒板レイアウト |
 | クラウド → ローカル | `OutboxEvent` / Pull API + ACK。ACK まで完了扱いにしない | `FieldTestSession`、`FieldFreshTestStaging`、`PhotoAsset` メタデータ、`BlackboardInstance`、取込依頼/候補 |
 | ローカル → クラウド | 取込結果 ACK / `import_status` 更新 | `imported` / `conflict` / `rejected` / `error` |
 
 | 同期単位 | 扱い |
 |---|---|
-| `FieldTestSession` | 現場一次記録の親。`submitted` 以降をデスクトップ取込対象にする。 |
+| `FieldTestSession` | 現場一次記録の親。`submitted` (確定・保存済み) 以降をデスクトップ取込対象にする。 |
 | `FieldFreshTestStaging` | `renban` 単位。通常 0、縦割り 0〜2。`changedFields` / `clearedFields` を保持。 |
 | `PhotoAsset` / `PhotoAssetTarget` | 写真メタデータ単位。Blob 本体は SAS / commit で管理。 |
 | `BlackboardInstance` | 撮影時点の黒板スナップショット。 |
@@ -611,35 +611,35 @@ FieldFreshTestStaging(field_fresh_test_id = F-001)
 ```mermaid
 flowchart LR
     subgraph 現場端末["現場スマホ・タブレット (PWA)"]
-      現場画面[現場アプリ画面]
-      端末保存[("端末内一時保存 IndexedDB")]
-      カメラ[カメラ]
+      app_ui["現場アプリ画面"]
+      local_db[("端末内一時保存 IndexedDB")]
+      camera["カメラ"]
     end
 
     subgraph クラウド["クラウド環境"]
-      現場サーバー[現場アプリサーバー]
-      独自データベース[("現場アプリ独自DB Azure SQL")]
-      写真領域[("写真保管領域 Blob Storage")]
-      黒板レイアウト[("黒板レイアウトDB 読み取り専用")]
+      app_server["現場アプリサーバー"]
+      cloud_db[("現場アプリ独自DB Azure SQL")]
+      blob_storage[("写真保管領域 Blob Storage")]
+      blackboard_layout_db[("黒板レイアウトDB 読み取り専用")]
     end
 
     subgraph 事務所["事務所・基幹側"]
-      同期エージェント["同期エージェント 裏方処理"]
-      基幹TPアプリ[基幹TPアプリ]
-      基幹DB[("基幹品質DB")]
-      取込用領域[("取込用ローカル領域")]
+      sync_agent["同期エージェント 裏方処理"]
+      core_tp_app["基幹TPアプリ"]
+      core_db[("基幹品質DB")]
+      local_staging[("取込用ローカル領域")]
     end
 
-    カメラ --> 現場画面
-    現場画面 --> 端末保存
-    現場画面 --> 現場サーバー
-    現場サーバー --> 独自データベース
-    現場サーバー --> 写真領域
-    現場サーバー --> 黒板レイアウト
-    同期エージェント <--> 現場サーバー
-    同期エージェント --> 取込用領域
-    基幹TPアプリ --> 取込用領域
-    基幹TPアプリ --> 基幹DB
+    camera --> app_ui
+    app_ui --> local_db
+    app_ui --> app_server
+    app_server --> cloud_db
+    app_server --> blob_storage
+    app_server --> blackboard_layout_db
+    sync_agent <--> app_server
+    sync_agent --> local_staging
+    core_tp_app --> local_staging
+    core_tp_app --> core_db
 ```
 
 ### 13.2 物理配置と利用環境
@@ -647,29 +647,29 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph 現場["現場スマホ・タブレット"]
-      ブラウザ["ブラウザ画面 (PWA)"]
-      撮影機能[カメラ撮影]
-      端末内保存[("端末内一時保存 IndexedDB")]
+      browser["ブラウザ画面 (PWA)"]
+      camera["カメラ撮影"]
+      local_storage[("端末内一時保存 IndexedDB")]
     end
 
     subgraph クラウド環境["クラウド環境"]
-      アプリサーバー["現場アプリサーバー API"]
-      クラウドDB[("現場アプリ独自DB")]
-      写真保存[("写真保管領域 Blob Storage")]
+      app_server["現場アプリサーバー API"]
+      cloud_db[("現場アプリ独自DB")]
+      blob_storage[("写真保管領域 Blob Storage")]
     end
 
     subgraph 事務所環境["事務所PC・基幹LAN"]
-      同期処理["同期エージェント"]
-      TP画面[基幹TPアプリ]
-      ローカルDB[("基幹品質DB")]
+      sync_agent["同期エージェント"]
+      tp_app["基幹TPアプリ"]
+      local_db[("基幹品質DB")]
     end
 
-    ブラウザ -- 通信 --> アプリサーバー
-    ブラウザ -- 写真保存 --> 写真保存
-    アプリサーバー --> クラウドDB
-    同期処理 -- 取込候補の同期 --> アプリサーバー
-    TP画面 --> ローカルDB
-    TP画面 --> 同期処理
+    browser -->|通信| app_server
+    browser -->|写真保存| blob_storage
+    app_server --> cloud_db
+    sync_agent -->|取込候補の同期| app_server
+    tp_app --> local_db
+    tp_app --> sync_agent
 ```
 
 ---
@@ -681,7 +681,7 @@ flowchart LR
 | 出荷予定 | `GET /api/v1/orgs/{orgId}/shipping-schedules?date=...` | 出荷予定一覧。 |
 | 出荷実績 | `GET /api/v1/orgs/{orgId}/shipments?date=...&yoteiId=...` | 出荷実績一覧。 |
 | 現場記録 | `POST /api/v1/orgs/{orgId}/field-test-sessions` | 出荷実績または複数出荷実績から `FieldTestSession` を作成。 |
-| 現場記録 | `GET /api/v1/orgs/{orgId}/field-test-sessions?shipmentId=...` | 出荷実績に紐づく現場記録一覧。未送信・未取込の再開に使用。 |
+| 現場記録 | `GET /api/v1/orgs/{orgId}/field-test-sessions?shipmentId=...` | 出荷実績に紐づく現場記録一覧。未確定・未取込の再開に使用。 |
 | 現場記録 | `GET /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}` | 現場記録詳細。Fresh、写真、黒板、TP 連携状態を返す。 |
 | Fresh | `PATCH /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}/fresh-tests/{renban}` | `renban` 別フレッシュ試験一次記録を更新。 |
 | 現場記録 | `POST /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}/submit` | 現場入力完了。デスクトップ取込待ちへ。 |
@@ -732,7 +732,7 @@ POST /api/v1/orgs/{orgId}/field-test-sessions
 
 ```mermaid
 classDiagram
-    class 出荷予定_ShippingSchedule {
+    class ShippingSchedule {
       +UUID yotei_id
       +Date syukka_yoteibi
       +String yotei_no
@@ -741,7 +741,7 @@ classDiagram
       +UUID plant_id
     }
 
-    class 出荷実績_Shipment {
+    class Shipment {
       +UUID syukka_id
       +UUID yotei_id
       +DateTime syukka_zikoku
@@ -749,7 +749,7 @@ classDiagram
       +Decimal syukkaryo
     }
 
-    class フレッシュ試験セッション_FieldTestSession {
+    class FieldTestSession {
       +UUID field_test_session_id
       +UUID tenant_id
       +UUID yotei_id
@@ -764,13 +764,13 @@ classDiagram
       +String source_hash
     }
 
-    class セッション出荷明細_FieldTestSessionShipmentLink {
+    class FieldTestSessionShipmentLink {
       +UUID field_test_session_id
       +Integer renban
       +UUID shipment_id
     }
 
-    class フレッシュ試験記録_FieldFreshTestStaging {
+    class FieldFreshTestStaging {
       +UUID field_fresh_test_id
       +UUID field_test_session_id
       +UUID shipment_id
@@ -793,14 +793,14 @@ classDiagram
       +UUID imported_tp_sampling_id
     }
 
-    class 黒板スナップショット_BlackboardInstance {
+    class BlackboardInstance {
       +String target_type
       +UUID target_id
       +JSON layout_snapshot_json
       +JSON resolved_values_json
     }
 
-    class 写真_PhotoAsset {
+    class PhotoAsset {
       +UUID photo_asset_id
       +String blob_path
       +String thumbnail_path
@@ -809,7 +809,7 @@ classDiagram
       +String device_info
     }
 
-    class 写真紐付け_PhotoAssetTarget {
+    class PhotoAssetTarget {
       +UUID photo_asset_target_id
       +UUID photo_asset_id
       +String target_type
@@ -819,15 +819,15 @@ classDiagram
       +Boolean is_primary
     }
 
-    出荷予定_ShippingSchedule "1" --> "0..*" 出荷実績_Shipment
-    出荷予定_ShippingSchedule "1" --> "0..*" フレッシュ試験セッション_FieldTestSession
-    フレッシュ試験セッション_FieldTestSession "1" --> "1..*" セッション出荷明細_FieldTestSessionShipmentLink
-    出荷実績_Shipment "1" --> "0..*" セッション出荷明細_FieldTestSessionShipmentLink
-    フレッシュ試験セッション_FieldTestSession "1" --> "1..*" フレッシュ試験記録_FieldFreshTestStaging
-    出荷実績_Shipment "1" --> "0..*" フレッシュ試験記録_FieldFreshTestStaging
-    フレッシュ試験記録_FieldFreshTestStaging "1" --> "0..*" 黒板スナップショット_BlackboardInstance
-    フレッシュ試験記録_FieldFreshTestStaging "1" --> "0..*" 写真紐付け_PhotoAssetTarget
-    写真_PhotoAsset "1" --> "0..*" 写真紐付け_PhotoAssetTarget
+    ShippingSchedule "1" --> "0..*" Shipment
+    ShippingSchedule "1" --> "0..*" FieldTestSession
+    FieldTestSession "1" --> "1..*" FieldTestSessionShipmentLink
+    Shipment "1" --> "0..*" FieldTestSessionShipmentLink
+    FieldTestSession "1" --> "1..*" FieldFreshTestStaging
+    Shipment "1" --> "0..*" FieldFreshTestStaging
+    FieldFreshTestStaging "1" --> "0..*" BlackboardInstance
+    FieldFreshTestStaging "1" --> "0..*" PhotoAssetTarget
+    PhotoAsset "1" --> "0..*" PhotoAssetTarget
 ```
 
 ### 15.2 データ関連フロー
@@ -835,15 +835,15 @@ classDiagram
 ```mermaid
 flowchart TD
     subgraph 現場試験アプリ ["現場試験アプリ (Web/Cloud)"]
-        A[出荷予定] -->|1件の予定に対して複数| B[出荷実績]
-        B -->|選択して開始| C[フレッシュ試験セッション]
-        C -->|通常は1件・縦割りは複数| D[フレッシュ試験記録]
-        D -->|撮影時点の表示内容| E[黒板スナップショット]
-        D -->|複数枚| F[写真紐付け / 写真]
+        A["出荷予定"] -->|1件の予定に対して複数| B["出荷実績"]
+        B -->|選択して開始| C["フレッシュ試験セッション"]
+        C -->|通常は1件・縦割りは複数| D["フレッシュ試験記録"]
+        D -->|撮影時点の表示内容| E["黒板スナップショット"]
+        D -->|複数枚| F["写真紐付け / 写真"]
     end
 
     subgraph 基幹システム ["基幹システム (Desktop/Local)"]
-        G[基幹TPデータ] -->|取込| H[正式フレッシュ試験値]
+        G["基幹TPデータ"] -->|取込| H["正式フレッシュ試験値"]
     end
 
     C -->|同期エージェント経由で取得| G
@@ -865,7 +865,7 @@ flowchart TD
 | 現場記録作成 | 可 | 可 | 可 |
 | フレッシュ値入力 | 可 | 可 | 可 |
 | 写真撮影・追加 | 可 | 可 | 可 |
-| 現場記録送信 | 可 | 可 | 可 |
+| 現場記録の確定・保存 | 可 | 可 | 可 |
 | 正式 TP への取込 | 不可 | 権限付き可 | 可 |
 | TP データ作成して取込 | 不可 | 原則不可 | 可 |
 | 競合解決 | 不可 | 可 | 可 |
@@ -880,8 +880,8 @@ flowchart TD
 | Fresh 更新 | `renban` 別 `changedFields` / `clearedFields` で更新でき、未入力空白で上書きしない。 |
 | 縦割り | 同一 `yotei_id` の複数出荷実績を 1 つの `FieldTestSession` として開き、`FieldFreshTestStaging` を `renban` 別に入力できる。 |
 | 写真複数枚 | 1 つの `FieldFreshTestStaging` に対して複数の `PhotoAssetTarget` を作成し、カテゴリ・表示順・代表写真を管理できる。 |
-| 通信断 | IndexedDB に未送信の現場記録・写真が残り、再送・commit できる。 |
-| デスクトップ取込 | 未取込一覧に表示され、既存のローカルTPデータへ取込、またはTPデータを基幹側で新規作成して取込処理が行えること。 |
+| 通信断 | IndexedDB に未確定の現場一次記録・写真が残り、通信復旧時に自動/手動で確定・commit できる。 |
+| デスクトップ取込 | ローカル同期された一次記録テーブルから、既存のローカルTPデータへ値・写真の取込、または新規作成したTPデータへ取込が行えること。 |
 | 競合 | 基幹側ローカルTPデータに既に別値がある場合、自動上書きせず競合状態として確認できること。 |
 | 黒板 | 現場試験記録の値を元に黒板を表示し、撮影時点のスナップショットを保存できること。 |
 | スコープ | Webアプリから基幹品質DB側の正式TPデータの作成・更新、供試体構成の編集、圧縮強度結果入力等が物理的に行えないこと（DB非配置のため）。 |
