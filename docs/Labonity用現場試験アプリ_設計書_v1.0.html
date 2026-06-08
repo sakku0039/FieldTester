@@ -161,7 +161,7 @@
         C --&gt; G[フレッシュ試験入力]
         G --&gt; H[黒板確認]
         H --&gt; I[写真撮影・保存]
-        I --&gt; J[現場記録送信]
+        I --&gt; J[現場記録の確定]
     end
 
     subgraph 基幹システム ["基幹システム (Desktop/Local)"]
@@ -181,7 +181,7 @@
 <tbody>
 <tr>
 <td>現場試験アプリ</td>
-<td>出荷実績別の現場一次記録を保存する。フレッシュ試験値、黒板、写真、メモ、送信状態を管理する。TP 正本を直接作らない。</td>
+<td>出荷実績別の現場一次記録を保存する。フレッシュ試験値、黒板、写真、メモ、確定状態を管理する。TP 正本を直接作らない。</td>
 <td><code>FieldTestSession</code> / <code>FieldFreshTestStaging</code> / <code>PhotoAsset</code> / <code>BlackboardInstance</code></td>
 </tr>
 <tr>
@@ -430,13 +430,13 @@
 <tr>
 <td style="text-align:right">3</td>
 <td>現場試験記録 作成/再開</td>
-<td><code>FieldTestSession</code> を作成。既存未送信・未取込記録があれば再開。</td>
+<td><code>FieldTestSession</code> を作成。既存の未確定・未取込記録があれば再開。</td>
 <td>現場試験アプリ</td>
 </tr>
 <tr>
 <td style="text-align:right">4</td>
-<td>送信・取込状況表示</td>
-<td>下書き、送信済み、取込完了、競合等のステータスを表示する。</td>
+<td>確定・取込状況表示</td>
+<td>下書き、確定済み、取込完了、競合等のステータスを表示する。</td>
 <td>現場試験アプリ</td>
 </tr>
 <tr>
@@ -459,7 +459,7 @@
 </tr>
 <tr>
 <td style="text-align:right">8</td>
-<td>現場記録送信</td>
+<td>現場記録の確定</td>
 <td><code>FieldTestSession</code> を <code>submitted</code> にする。通信断時は IndexedDB に保持。</td>
 <td>現場試験アプリ</td>
 </tr>
@@ -471,7 +471,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="送信取込状況ステータス">送信・取込状況ステータス </h3>
+<h3 id="確定取込状況ステータス">確定・取込状況ステータス </h3>
 <table>
 <thead>
 <tr>
@@ -488,7 +488,7 @@
 </tr>
 <tr>
 <td><code>submitted</code></td>
-<td>送信済み（現場入力完了、デスクトップ取込待ち）</td>
+<td>確定済み（現場入力完了、デスクトップ取込待ち）</td>
 <td>現場試験アプリ</td>
 </tr>
 <tr>
@@ -612,7 +612,7 @@
 <h3 id="61-状態遷移">6.1 状態遷移 </h3>
 <div class="mermaid">stateDiagram-v2
     [*] --&gt; draft: 新規作成/編集開始
-    draft --&gt; submitted: 現場で確定(送信)
+    draft --&gt; submitted: 現場で確定
     draft --&gt; voided: 現場で取消
     submitted --&gt; imported: 基幹側で取込完了
     submitted --&gt; conflict: 取込先に別値あり(競合)
@@ -797,14 +797,14 @@
 <td>既存記録を直接上書きせず、必要に応じて <code>superseded</code> または <code>voided</code> で履歴を残す。</td>
 </tr>
 <tr>
-<td>二重送信</td>
+<td>重複確定</td>
 <td><code>source_hash</code> / <code>idempotency_key</code> で冪等に処理する。</td>
 </tr>
 </tbody>
 </table>
 <hr>
 <h2 id="8-デスクトップ-tp-アプリ取込設計">8. デスクトップ TP アプリ取込設計 </h2>
-<p>デスクトップ TP アプリには、クラウドに送信された <code>FieldTestSession</code> / <code>FieldFreshTestStaging</code> を確認し、正式な TP 採取データへ反映する「現場記録取込」機能を追加する。</p>
+<p>デスクトップ TP アプリには、クラウドで確定された <code>FieldTestSession</code> / <code>FieldFreshTestStaging</code> を確認し、正式な TP 採取データへ反映する「現場記録取込」機能を追加する。</p>
 <h3 id="現場フレッシュ試験記録-取込画面例">現場フレッシュ試験記録 取込画面例 </h3>
 <pre data-role="codeBlock" data-info="text" class="language-text text"><code>未取込:
 - 2026/06/05 10:30 ○○現場 1号車 スランプ 18.0 空気量 4.5 写真 3枚
@@ -925,7 +925,7 @@
 <p>「差分確認」は、通常の流れでは目立たせない例外処理です。基幹 TP アプリ側で TP データを新規に作成して取り込む通常運用ではほとんど発生しませんが、以下の場合に競合解決フロー（<code>conflict</code> 状態）が作動します。</p>
 <ul>
 <li><strong>値の乖離</strong>：基幹側で既にスランプ・空気量・温度などが手入力されており、現場アプリの測定値と異なる場合。</li>
-<li><strong>重複・再送</strong>：同一フレッシュ試験が誤って複数回送信・取込された場合。</li>
+<li><strong>重複・再確定</strong>：同一フレッシュ試験が誤って複数回確定・取込された場合。</li>
 <li><strong>削除値の扱い</strong>：現場アプリ側で「明示的に削除された（<code>clearedFields</code>）」項目を、基幹側の既存値からも削除するかどうかの確認。</li>
 </ul>
 <hr>
@@ -997,8 +997,8 @@
     画面-&gt;&gt;写真保管: 写真を保存 (Blob PUT)
     画面-&gt;&gt;サーバー: 写真保存完了を通知 (Commit)
     サーバー-&gt;&gt;独自DB: PhotoAsset / PhotoAssetTarget 保存
-    現場担当者-&gt;&gt;画面: データを確定 (送信)
-    画面-&gt;&gt;サーバー: 現場記録送信を依頼
+    現場担当者-&gt;&gt;画面: データを確定
+    画面-&gt;&gt;サーバー: 現場記録の確定を依頼
     サーバー-&gt;&gt;独自DB: FieldTestSession 状態を submitted に更新
 </div><hr>
 <h2 id="10-縦割り設計">10. 縦割り設計 </h2>
@@ -1113,7 +1113,7 @@ FieldTestSession
 </tr>
 <tr>
 <td>通信断</td>
-<td>IndexedDB に未送信写真を保持し、再送可能にする。</td>
+<td>IndexedDB に未確定写真を保持し、確定可能にする。</td>
 </tr>
 <tr>
 <td>複数枚保存</td>
@@ -1339,7 +1339,7 @@ FieldTestSession
 <tr>
 <td>現場記録</td>
 <td><code>GET /api/v1/orgs/{orgId}/field-test-sessions?shipmentId=...</code></td>
-<td>出荷実績に紐づく現場記録一覧。未送信・未取込の再開に使用。</td>
+<td>出荷実績に紐づく現場記録一覧。未確定・未取込の再開に使用。</td>
 </tr>
 <tr>
 <td>現場記録</td>
@@ -1577,7 +1577,7 @@ FieldTestSession
 <h2 id="16-認証権限テナント分離">16. 認証・権限・テナント分離 </h2>
 <ul>
 <li>LibertyAccount の <code>orgId</code> を <code>tenant_id</code> として扱い、全 API で URL <code>orgId</code>・トークン所属 <code>org</code>・DB <code>tenant_id</code> の一致を確認する。</li>
-<li><code>FieldOperator</code> は現場記録作成、フレッシュ値入力、写真撮影、黒板保存、現場記録送信を行える。</li>
+<li><code>FieldOperator</code> は現場記録作成、フレッシュ値入力、写真撮影、黒板保存、現場記録の確定を行える。</li>
 <li><code>FieldOperator</code> は TP 正本作成、出荷紐づけ変更、試験区分 / 配合 / 現場変更、供試体構成変更を行えない。</li>
 <li><code>QualityManager</code> は現場記録の確認、必要に応じた取込差分の確認、競合解決を行える（供試体情報の確認・修正は基幹システム側で行う）。</li>
 <li><code>TenantAdmin</code> / 事務所側はデスクトップ TP アプリでの TP 作成、取込、対象外処理、出荷紐づけ見直しを行う。</li>
@@ -1612,7 +1612,7 @@ FieldTestSession
 <td>可</td>
 </tr>
 <tr>
-<td>現場記録送信</td>
+<td>現場記録の確定</td>
 <td>可</td>
 <td>可</td>
 <td>可</td>
@@ -1667,7 +1667,7 @@ FieldTestSession
 </tr>
 <tr>
 <td>通信断</td>
-<td>IndexedDB に未送信の現場記録・写真が残り、再送・commit できる。</td>
+<td>IndexedDB に未確定の現場記録・写真が残り、確定・commit できる。</td>
 </tr>
 <tr>
 <td>デスクトップ取込</td>
