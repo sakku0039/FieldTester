@@ -30,36 +30,35 @@
   - [2.2 現場・基幹連携業務フロー](#22-現場基幹連携業務フロー)
   - [2.3 ユースケース図](#23-ユースケース図)
 - [3. 用語整理](#3-用語整理)
-- [4. デスクトップ側で作成される TP データと本システムの扱い](#4-デスクトップ側で作成される-tp-データと本システムの扱い)
-- [5. 現場アプリで登録・確認する範囲](#5-現場アプリで登録確認する範囲)
-- [6. 画面フローと UI イメージ](#6-画面フローと-ui-イメージ)
-  - [6.1 画面遷移図](#61-画面遷移図)
-- [7. FieldTestSession 設計](#7-fieldtestsession-設計)
-  - [7.1 状態遷移](#71-状態遷移)
-- [8. FieldFreshTestStaging 設計](#8-fieldfreshteststaging-設計)
-  - [8.1 更新ルール](#81-更新ルール)
-- [9. デスクトップ TP アプリ取込設計](#9-デスクトップ-tp-アプリ取込設計)
-  - [9.1 取込時の値反映ルール](#91-取込時の値反映ルール)
-  - [9.2 デスクトップ取込シーケンス](#92-デスクトップ取込シーケンス)
-  - [9.3 値競合・差分確認の例外処理方針](#93-値競合差分確認の例外処理方針)
-- [10. フレッシュ試験入力設計](#10-フレッシュ試験入力設計)
-  - [10.1 フレッシュ試験登録シーケンス](#101-フレッシュ試験登録シーケンス)
-- [11. 縦割り設計](#11-縦割り設計)
-- [12. 電子黒板機能設計](#12-電子黒板機能設計)
-- [13. 写真・Blob 保存設計](#13-写真blob-保存設計)
-  - [13.1 PhotoAssetTarget 設計](#131-photoassettarget-設計)
-- [14. 同期 Agent 設計](#14-同期-agent-設計)
-  - [14.1 アプリとデータの配置構成 (システム構成図)](#141-アプリとデータの配置構成-システム構成図)
-  - [14.2 物理配置と利用環境](#142-物理配置と利用環境)
-- [15. API 設計](#15-api-設計)
-  - [15.1 FieldTestSession 作成リクエスト例](#151-fieldtestsession-作成リクエスト例)
-- [16. データモデル](#16-データモデル)
-  - [16.1 主要データモデル クラス図](#161-主要データモデル-クラス図)
-  - [16.2 データ関連フロー](#162-データ関連フロー)
-- [17. 認証・権限・テナント分離](#17-認証権限テナント分離)
-- [18. テスト設計・受入条件](#18-テスト設計受入条件)
-- [19. 実装ロードマップ](#19-実装ロードマップ)
-- [20. 未決事項・確認事項](#20-未決事項確認事項)
+- [4. 現場アプリで登録・確認する範囲](#4-現場アプリで登録確認する範囲)
+- [5. 画面フローと UI イメージ](#5-画面フローと-ui-イメージ)
+  - [5.1 画面遷移図](#51-画面遷移図)
+- [6. FieldTestSession 設計](#6-fieldtestsession-設計)
+  - [6.1 状態遷移](#61-状態遷移)
+- [7. FieldFreshTestStaging 設計](#7-fieldfreshteststaging-設計)
+  - [7.1 更新ルール](#71-更新ルール)
+- [8. デスクトップ TP アプリ取込設計](#8-デスクトップ-tp-アプリ取込設計)
+  - [8.1 取込時の値反映ルール](#81-取込時の値反映ルール)
+  - [8.2 デスクトップ取込シーケンス](#82-デスクトップ取込シーケンス)
+  - [8.3 値競合・差分確認の例外処理方針](#83-値競合差分確認の例外処理方針)
+- [9. フレッシュ試験入力設計](#9-フレッシュ試験入力設計)
+  - [9.1 フレッシュ試験登録シーケンス](#91-フレッシュ試験登録シーケンス)
+- [10. 縦割り設計](#10-縦割り設計)
+- [11. 電子黒板機能設計](#11-電子黒板機能設計)
+- [12. 写真・Blob 保存設計](#12-写真blob-保存設計)
+  - [12.1 PhotoAssetTarget 設計](#121-photoassettarget-設計)
+- [13. 同期 Agent 設計](#13-同期-agent-設計)
+  - [13.1 アプリとデータの配置構成 (システム構成図)](#131-アプリとデータの配置構成-システム構成図)
+  - [13.2 物理配置と利用環境](#132-物理配置と利用環境)
+- [14. API 設計](#14-api-設計)
+  - [14.1 FieldTestSession 作成リクエスト例](#141-fieldtestsession-作成リクエスト例)
+- [15. データモデル](#15-データモデル)
+  - [15.1 主要データモデル クラス図](#151-主要データモデル-クラス図)
+  - [15.2 データ関連フロー](#152-データ関連フロー)
+- [16. 認証・権限・テナント分離](#16-認証権限テナント分離)
+- [17. テスト設計・受入条件](#17-テスト設計受入条件)
+- [18. 実装ロードマップ](#18-実装ロードマップ)
+- [19. 未決事項・確認事項](#19-未決事項確認事項)
 - [付録 A. 主要ローカル DB 対応](#付録-a-主要ローカル-db-対応)
 - [付録 B. 用語集](#付録-b-用語集)
 
@@ -68,6 +67,7 @@
 ## 2. 設計方針
 
 - 現場試験アプリは、出荷予定・出荷実績を選び、`FieldTestSession` を作成または再開して現場試験記録を保存するウェブアプリケーションとする。
+- 出荷予定・出荷実績・現場マスター・黒板レイアウトの 4 領域は、Sync Agent によりローカル基幹 DB からクラウドへ同期される。現場アプリは同期済みの 4 領域を参照して、対象出荷の選択、現場情報参照、黒板プレビューを行う。
 - フレッシュ試験の現場実測値は、 `FieldFreshTestStaging` に保存する。これは TP 正本ではなく、デスクトップ TP アプリが取り込むための一次記録である。
 - TP 採取対象の業務判定、TP 採取データの正式作成、供試体セット・ピース初期構成、帳票連携は、原則としてデスクトップアプリ / 出荷管理 / Ex3010 / TP アプリ側の責務（基幹システム側）とする。
 - Web 側は、出荷実績別の現場一次記録（フレッシュ試験値、黒板スナップショット、写真）を保存する。TPデータはクラウド上には一切同期されないため、現場アプリ（Web）側で供試体情報の確認・修正やTPデータの直接照合は行わない。
@@ -81,20 +81,28 @@
 
 ```mermaid
 flowchart TD
+    subgraph 基幹システム_事前同期 ["基幹システム (Desktop/Local)"]
+        Z["Sync Agent が4領域をクラウド同期
+出荷予定・出荷実績・現場マスター・黒板レイアウト"]
+    end
+
     subgraph 現場試験アプリ ["現場試験アプリ (Web/Cloud)"]
-        A["出荷予定一覧"] --> B["出荷実績一覧"]
+        A["同期済み出荷予定一覧"] --> B["同期済み出荷実績一覧"]
         B --> C["現場試験記録を作成/再開"]
         C --> G["フレッシュ試験入力"]
-        G --> H["黒板データ編集 (必要に応じて)"]
+        G --> H["同期済み黒板レイアウトで黒板データ編集"]
         H --> I["黒板を合成した写真の撮影・保存"]
         I --> J["現場記録の確定・保存"]
     end
 
-    subgraph 基幹システム ["基幹システム (Desktop/Local)"]
-        J --> K["同期Agentによる現場一次記録(Staging)のローカル同期"]
+    subgraph 基幹システム_取込 ["基幹システム (Desktop/Local)"]
+        K["同期Agentによる現場一次記録(Staging)のローカル同期"]
         K --> L["基幹TPアプリでローカル同期された一次記録から取り込む"]
         L --> M["正式TPデータへのフレッシュ試験結果・黒板・写真の反映"]
     end
+
+    Z --> A
+    J --> K
 ```
 
 ### 2.1 責務分担
@@ -103,20 +111,24 @@ flowchart TD
 |---|---|---|
 | 現場試験アプリ | 出荷実績別の現場一次記録を保存する。フレッシュ試験値、黒板、写真、メモ、確定・取込状態を管理する。TP 正本を直接作らない。 | `FieldTestSession` / `FieldFreshTestStaging` / `PhotoAsset` / `BlackboardInstance` |
 | デスクトップ TP アプリ | 現場一次記録を確認し、既存 TP へ取込、または TP データを正式作成して取込する。競合解決と帳票連携を担当する。 | `TestPieceSaisyu_Main` / `FreshSiken` / `Set` / `Piece` / `SyukkaData` |
-| Sync Agent | ローカル→クラウド同期、クラウド→ローカル取込候補の取得、ACK、冪等性、競合状態を管理する。 | `ExternalIdMapping` / `source_hash` / `OutboxEvent` / `SyncLog` |
+| Sync Agent | ローカル→クラウド同期、クラウド→ローカル取込候補の取得、ACK、冪等性、競合状態を管理する。ローカル→クラウド同期の対象は、出荷予定・出荷実績・現場マスター・黒板レイアウトの 4 領域とする。 | `ExternalIdMapping` / `source_hash` / `OutboxEvent` / `SyncLog` |
 
 ### 2.2 現場・基幹連携業務フロー
 
 ```mermaid
 flowchart TD
+    subgraph 基幹データ同期["同期 Agent"]
+        S0["出荷予定・出荷実績・現場マスター・黒板レイアウトをクラウドへ同期"]
+    end
+
     subgraph 現場アプリ["現場フレッシュ試験アプリ"]
-        A([開始]) --> B["出荷予定一覧を確認"]
+        A([開始]) --> B["同期済み出荷予定一覧を確認"]
         B --> C["出荷予定を選択"]
-        C --> D["出荷実績一覧を確認"]
+        C --> D["同期済み出荷実績一覧を確認"]
         D --> E["出荷実績を選択"]
         E --> F["フレッシュ試験を開始または再開"]
         F --> G["フレッシュ試験値を入力"]
-        G --> H["黒板データ編集 (必要に応じて)"]
+        G --> H["同期済み黒板レイアウトで黒板データ編集"]
         H --> I["黒板を合成した写真の撮影・複数枚保存"]
         I --> J["現場一次記録を確定・保存"]
     end
@@ -128,6 +140,7 @@ flowchart TD
         M --> N([完了])
     end
 
+    S0 --> A
     J --> K
 ```
 
@@ -180,6 +193,8 @@ flowchart LR
 |---|---|---|
 | 出荷予定 | いつ、どの現場へ、どの配合を、どれだけ出荷する予定かを表す上位データ。試験予定ではない。 | `YoteiDataMain` / `yotei_id` / `syukka_yoteibi` / `yotei_no` |
 | 出荷実績 | 実際の 1 台ごとの出荷データ。車番、出荷時刻、数量、配合、予定 ID を持つ。 | `SyukkaDataMain` / `syukka_id` / `syaban` |
+| 現場マスター | 現場名、住所、緯度・経度などを持つ現場情報。現場情報表示、検索補助、Google マップ起動で使用する。 | `Genba` / `Genba_Syukka` / `FieldSite` |
+| 黒板レイアウト | Ex7000 黒板機能で作成された黒板テンプレート。現場アプリでは読み取り専用で利用する。 | `KokubanLayout` / `KokubanLayout_Data` / `KokubanLayoutSettings` |
 | TP 採取対象 | 出荷実績段階で実際に TP 採取対象として扱う情報。チェック漏れや未設定があり得るため、Web はこの有無だけに依存しない。 | `SyukkaData_TpSaisyu` |
 | TP 採取データ | 正式な TP 採取結果データ。デスクトップ TP アプリ / Ex3010 側で作成・管理する正本。 | `TestPieceSaisyu_Main` / `TestPieceSampling` |
 | 現場試験記録 | Web アプリで作成する出荷実績別の現場一次記録。TP 未作成でも作成できる。 | `FieldTestSession` |
@@ -216,11 +231,12 @@ flowchart LR
 
 ## 5. 画面フローと UI イメージ
 
-現場試験アプリでは、出荷実績一覧の後に「現場試験記録」を作成または再開する。TP データの有無は現場側では意識せず、常に出荷実績情報に紐づく現場フレッシュ試験記録として入力・撮影を行う。
+現場試験アプリでは、同期済みの出荷予定・出荷実績を選択した後に「現場試験記録」を作成または再開する。現場マスターは現場情報表示や Google マップ起動等で使用し、黒板レイアウトは黒板プレビュー・撮影時に使用する。TP データの有無は現場側では意識せず、常に出荷実績情報に紐づく現場フレッシュ試験記録として入力・撮影を行う。
 
 | ステップ | 画面/ブロック | 主な操作 | 範囲 |
 |---:|---|---|---|
-| 1 | 出荷予定一覧 | 日付・現場・予定 No で出荷予定を選択。 | 現場試験アプリ |
+| 0 | 基礎データ同期 | 出荷予定・出荷実績・現場マスター・黒板レイアウトをクラウドへ同期。 | Sync Agent |
+| 1 | 出荷予定一覧 | 日付・現場・予定 No で同期済み出荷予定を選択。 | 現場試験アプリ |
 | 2 | 出荷実績一覧 | 対象出荷実績を選択。縦割りでは複数出荷実績を選択。 | 現場試験アプリ |
 | 3 | 現場試験記録 作成/再開 | `FieldTestSession` を作成。既存未送信・未取込記録があれば再開。 | 現場試験アプリ |
 | 4 | 送信・取込状況表示 | 下書き、送信済み、取込完了、競合等のステータスを表示する。 | 現場試験アプリ |
@@ -393,14 +409,24 @@ stateDiagram-v2
 ```mermaid
 sequenceDiagram
     actor OfficeUser as 事務所担当者
+    participant LocalDB as ローカル基幹DB
     participant SyncAgent as 同期エージェント
     participant CloudDB as 現場アプリ独自DB (Cloud)
     participant LocalStaging as 基幹側取込領域 (Local Staging)
     participant DesktopApp as 基幹TPアプリ (Desktop)
     participant CoreDB as 基幹品質DB
 
+    rect rgb(235, 248, 255)
+        note over LocalDB,CloudDB: 事前同期: 現場アプリで対象出荷を選択するための4領域同期
+        SyncAgent->>LocalDB: "出荷予定・出荷実績・現場マスター・黒板レイアウトを差分取得"
+        LocalDB-->>SyncAgent: "YoteiDataMain / SyukkaDataMain / Genba系 / KokubanLayout系"
+        SyncAgent->>CloudDB: "4領域をクラウドへ冪等Upsert"
+    end
+
+    note over CloudDB: "現場アプリは同期済みの4領域を参照して出荷選択・現場情報表示・黒板プレビューを行う"
+
     rect rgb(245, 245, 245)
-        note over SyncAgent,LocalStaging: 裏側の同期処理 (Sync Agent)
+        note over SyncAgent,LocalStaging: 現場一次記録のローカル取込
         SyncAgent->>CloudDB: "確定・保存済み(submitted)現場一次記録を取得"
         CloudDB-->>SyncAgent: "FieldTestSession / FieldFreshTestStaging / 写真・黒板メタデータ"
         SyncAgent->>LocalStaging: "ローカルの一次記録テーブル(Staging)へ同期・保存"
@@ -424,6 +450,7 @@ sequenceDiagram
     DesktopApp->>LocalStaging: "取込結果・ステータスを保存"
     SyncAgent->>CloudDB: "取込結果を反映 (imported / conflict / rejected)"
 ```
+
 
 ### 8.3 値競合・差分確認の例外処理方針
 
@@ -531,6 +558,7 @@ FieldTestSession
 ## 11. 電子黒板機能設計
 
 - Ex7000 由来の `KokubanLayout` / `KokubanLayout_Data` / `KokubanLayoutSettings` を読み取り専用で利用する。
+- 黒板レイアウトは Sync Agent によりローカル DB からクラウド DB へ同期されたものを使用する。
 - Web 側には黒板レイアウト作成・編集機能を作らない。
 - TP 未作成時は、`FieldFreshTestStaging` の値を黒板差込値として使用する。
 - TP 取込後も、撮影時点の `BlackboardInstance` は履歴として保持し、レイアウトや値のスナップショットを変更しない。
@@ -594,9 +622,18 @@ FieldFreshTestStaging(field_fresh_test_id = F-001)
 
 | 方向 | 方式 | 対象 |
 |---|---|---|
-| ローカル → クラウド | `ExternalIdMapping` + `source_hash` による冪等 Upsert | 出荷予定、出荷実績、黒板レイアウト |
+| ローカル → クラウド | `ExternalIdMapping` + `source_hash` による冪等 Upsert | 出荷予定、出荷実績、現場マスター、黒板レイアウト |
 | クラウド → ローカル | `OutboxEvent` / Pull API + ACK。ACK まで完了扱いにしない | `FieldTestSession`、`FieldFreshTestStaging`、`PhotoAsset` メタデータ、`BlackboardInstance`、取込依頼/候補 |
 | ローカル → クラウド | 取込結果 ACK / `import_status` 更新 | `imported` / `conflict` / `rejected` / `error` |
+
+**ローカル → クラウド必須同期対象**
+
+| 領域 | ローカル側 | クラウド側 | 扱い |
+|---|---|---|---|
+| 出荷予定 | `YoteiDataMain` | `ShippingSchedule` | 現場試験アプリの出荷予定一覧で使用する。 |
+| 出荷実績 | `SyukkaDataMain` | `Shipment` | 現場試験記録作成時の対象出荷として使用する。 |
+| 現場マスター | `Genba` / `Genba_Syukka` | `FieldSite` | 現場情報、住所、緯度・経度、Google マップ起動等で使用する。 |
+| 黒板レイアウト | `KokubanLayout` / `KokubanLayout_Data` / `KokubanLayoutSettings` | 黒板レイアウト DB | 現場試験アプリの黒板プレビュー・撮影用レンダリングで使用する。 |
 
 | 同期単位 | 扱い |
 |---|---|
@@ -613,32 +650,32 @@ FieldFreshTestStaging(field_fresh_test_id = F-001)
 flowchart LR
     subgraph 現場端末["現場スマホ・タブレット (PWA)"]
       app_ui["現場アプリ画面"]
-      local_db[("端末内一時保存 IndexedDB")]
+      device_db[("端末内一時保存 IndexedDB")]
       camera["カメラ"]
     end
 
     subgraph クラウド["クラウド環境"]
       app_server["現場アプリサーバー"]
-      cloud_db[("現場アプリ独自DB Azure SQL")]
+      cloud_db[("現場アプリ独自DB Azure SQL<br/>出荷予定・出荷実績・現場マスター・黒板レイアウト")]
       blob_storage[("写真保管領域 Blob Storage")]
-      blackboard_layout_db[("黒板レイアウトDB 読み取り専用")]
     end
 
     subgraph 事務所["事務所・基幹側"]
       sync_agent["同期エージェント 裏方処理"]
       core_tp_app["基幹TPアプリ"]
-      core_db[("基幹品質DB")]
+      core_db[("基幹品質DB<br/>出荷予定・出荷実績・現場マスター・黒板レイアウト")]
       local_staging[("取込用ローカル領域")]
     end
 
     camera --> app_ui
-    app_ui --> local_db
+    app_ui --> device_db
     app_ui --> app_server
     app_server --> cloud_db
     app_server --> blob_storage
-    app_server --> blackboard_layout_db
-    sync_agent <--> app_server
-    sync_agent --> local_staging
+    core_db -->|"4領域の差分取得"| sync_agent
+    sync_agent -->|"4領域をクラウドへ同期"| app_server
+    sync_agent -->|"現場一次記録をローカルへ同期"| local_staging
+    sync_agent -->|"取込結果をクラウドへ反映"| app_server
     core_tp_app --> local_staging
     core_tp_app --> core_db
 ```
@@ -655,20 +692,22 @@ flowchart LR
 
     subgraph クラウド環境["クラウド環境"]
       app_server["現場アプリサーバー API"]
-      cloud_db[("現場アプリ独自DB")]
+      cloud_db[("現場アプリ独自DB<br/>出荷予定・出荷実績・現場マスター・黒板レイアウト")]
       blob_storage[("写真保管領域 Blob Storage")]
     end
 
     subgraph 事務所環境["事務所PC・基幹LAN"]
       sync_agent["同期エージェント"]
       tp_app["基幹TPアプリ"]
-      local_db[("基幹品質DB")]
+      local_db[("基幹品質DB<br/>4領域の同期元")]
     end
 
     browser -->|通信| app_server
     browser -->|写真保存| blob_storage
     app_server --> cloud_db
-    sync_agent -->|取込候補の同期| app_server
+    local_db -->|"出荷予定・出荷実績・現場マスター・黒板レイアウト"| sync_agent
+    sync_agent -->|"4領域のクラウド同期"| app_server
+    sync_agent -->|"現場一次記録・取込結果の同期"| app_server
     tp_app --> local_db
     tp_app --> sync_agent
 ```
@@ -692,6 +731,10 @@ flowchart LR
 | 写真 | `POST /api/v1/orgs/{orgId}/photos/{photoId}/commit` | `PhotoAsset` 確定。`PhotoAssetTarget` を複数指定可能。 |
 | 取込 | `GET /api/sync/v1/orgs/{orgId}/field-test-sessions/import-candidates` | デスクトップ TP アプリが未取込の現場記録を取得。 |
 | 取込 | `POST /api/sync/v1/orgs/{orgId}/field-test-sessions/{sessionId}/import-result` | 取込結果、競合、取込先 TP ID を返す。 |
+| 同期 | `POST /api/sync/v1/orgs/{orgId}/field-sites/import` | 現場マスターをクラウドへ同期する。 |
+| 同期 | `POST /api/sync/v1/orgs/{orgId}/shipping-schedules/import` | 出荷予定をクラウドへ同期する。 |
+| 同期 | `POST /api/sync/v1/orgs/{orgId}/shipments/import` | 出荷実績をクラウドへ同期する。 |
+| 同期 | `POST /api/sync/v1/orgs/{orgId}/blackboard-layouts/import` | 黒板レイアウトをクラウドへ同期する。 |
 
 ### 14.1 FieldTestSession 作成リクエスト例
 
@@ -715,12 +758,16 @@ POST /api/v1/orgs/{orgId}/field-test-sessions
 
 | クラウドテーブル | 主な項目 | 対応/備考 |
 |---|---|---|
+| `FieldSite` | `genba_id`, `genba_mei1`, `genba_mei2`, `ryakusyo`, `zyusyo1`, `zyusyo2`, `ido`, `keido` | `Genba` / `Genba_Syukka` 相当。現場マスター。 |
 | `ShippingSchedule` | `yotei_id`, `syukka_yoteibi`, `yotei_no`, `genba_id`, `haigo_id` | `YoteiDataMain` 相当。 |
 | `Shipment` | `syukka_id`, `yotei_id`, `syukka_zikoku`, `syaban`, `syukkaryo` | `SyukkaDataMain` 相当。現場記録の起点。 |
 | `FieldTestSession` | `field_test_session_id`, `shipment_id`, `yotei_id`, `status`, `linked_tp_sampling_id` | Web 側の現場一次記録親。新規。 `linked_tp_sampling_id` はクラウド上ではリレーションを持たない。 |
 | `FieldTestSessionShipmentLink` | `field_test_session_id`, `renban`, `shipment_id` | 縦割り用。通常取りでも検索補助として 1 件作成可。 |
 | `FieldFreshTestStaging` | `field_fresh_test_id`, `field_test_session_id`, `renban`, `slump`, `air`, `changed_fields_json` | フレッシュ試験一次記録。正本ではない。新規。 |
-| `BlackboardInstance` | `target_type`, `target_id`, `layout_snapshot_json`, `resolved_values_json` | 撮影時点の黒板スナップショット。 |
+| `KokubanLayout` | `id`, `layout_kubun`, `renban`, `layout_mei`, `grid_gyosu`, `grid_retusu` | Ex7000 由来の黒板レイアウト本体。同期対象。Web 側は読み取り専用。 |
+| `KokubanLayout_Data` | `kokuban_layout_id`, `renban`, `hyozi_gyo`, `hyozi_retu`, `data_kubun`, `data_index`, `fontsize`, `text_align` | 黒板レイアウト明細。同期対象。 |
+| `KokubanLayoutSettings` | `grid_color`, `whiteboard`, `kyodo_layout_tuzyo`, `kyodo_layout_tatewari`, `sikenneri_layout` | 黒板既定レイアウト・表示設定。同期対象。 |
+| `BlackboardInstance` | `target_type`, `target_id`, `kokuban_layout_id`, `layout_snapshot_json`, `resolved_values_json` | 撮影時点の黒板スナップショット。 |
 | `PhotoAsset` | `blob_path`, `thumbnail_path`, `hash`, `taken_at`, `device_info` | 写真メタデータ。 |
 | `PhotoAssetTarget` | `photo_asset_id`, `target_type`, `target_id`, `photo_category`, `display_order` | 写真と対象の関連。1 Fresh に N 件。 |
 | `AuditLog` | `action`, `target_type`, `before_json`, `after_json`, `reason`, `actor_id`, `created_at` | 重要操作の監査。 |
@@ -733,6 +780,17 @@ POST /api/v1/orgs/{orgId}/field-test-sessions
 
 ```mermaid
 classDiagram
+    class FieldSite {
+      +UUID genba_id
+      +String genba_mei1
+      +String genba_mei2
+      +String ryakusyo
+      +String zyusyo1
+      +String zyusyo2
+      +String ido
+      +String keido
+    }
+
     class ShippingSchedule {
       +UUID yotei_id
       +Date syukka_yoteibi
@@ -794,9 +852,38 @@ classDiagram
       +UUID imported_tp_sampling_id
     }
 
+    class KokubanLayout {
+      +UUID id
+      +Integer layout_kubun
+      +Integer renban
+      +String layout_mei
+      +Integer grid_gyosu
+      +Integer grid_retusu
+    }
+
+    class KokubanLayoutData {
+      +UUID kokuban_layout_id
+      +Integer renban
+      +Integer hyozi_gyo
+      +Integer hyozi_retu
+      +Integer height_gyosu
+      +Integer width_retusu
+      +Integer data_kubun
+      +Integer data_index
+    }
+
+    class KokubanLayoutSettings {
+      +Integer grid_color
+      +Boolean whiteboard
+      +UUID kyodo_layout_tuzyo
+      +UUID kyodo_layout_tatewari
+      +UUID sikenneri_layout
+    }
+
     class BlackboardInstance {
       +String target_type
       +UUID target_id
+      +UUID kokuban_layout_id
       +JSON layout_snapshot_json
       +JSON resolved_values_json
     }
@@ -820,12 +907,17 @@ classDiagram
       +Boolean is_primary
     }
 
+    FieldSite "1" --> "0..*" ShippingSchedule
+    FieldSite "1" --> "0..*" Shipment
     ShippingSchedule "1" --> "0..*" Shipment
     ShippingSchedule "1" --> "0..*" FieldTestSession
     FieldTestSession "1" --> "1..*" FieldTestSessionShipmentLink
     Shipment "1" --> "0..*" FieldTestSessionShipmentLink
     FieldTestSession "1" --> "1..*" FieldFreshTestStaging
     Shipment "1" --> "0..*" FieldFreshTestStaging
+    KokubanLayout "1" --> "0..*" KokubanLayoutData
+    KokubanLayoutSettings "1" --> "0..*" KokubanLayout
+    KokubanLayout "1" --> "0..*" BlackboardInstance
     FieldFreshTestStaging "1" --> "0..*" BlackboardInstance
     FieldFreshTestStaging "1" --> "0..*" PhotoAssetTarget
     PhotoAsset "1" --> "0..*" PhotoAssetTarget
@@ -836,10 +928,13 @@ classDiagram
 ```mermaid
 flowchart TD
     subgraph 現場試験アプリ ["現場試験アプリ (Web/Cloud)"]
-        A["出荷予定"] -->|1件の予定に対して複数| B["出荷実績"]
+        S["現場マスター"] --> A["出荷予定"]
+        S --> B["出荷実績"]
+        A -->|1件の予定に対して複数| B
         B -->|選択して開始| C["フレッシュ試験セッション"]
         C -->|通常は1件・縦割りは複数| D["フレッシュ試験記録"]
-        D -->|撮影時点の表示内容| E["黒板スナップショット"]
+        L["黒板レイアウト"] -->|読み取り専用で参照| E["黒板スナップショット"]
+        D -->|撮影時点の表示内容| E
         D -->|複数枚| F["写真紐付け / 写真"]
     end
 
@@ -878,6 +973,7 @@ flowchart TD
 
 | テスト | 受入条件 |
 |---|---|
+| 基礎データ同期 | Sync Agent により、出荷予定・出荷実績・現場マスター・黒板レイアウトの 4 領域をローカルからクラウドへ同期できること。 |
 | Fresh 更新 | `renban` 別 `changedFields` / `clearedFields` で更新でき、未入力空白で上書きしない。 |
 | 縦割り | 同一 `yotei_id` の複数出荷実績を 1 つの `FieldTestSession` として開き、`FieldFreshTestStaging` を `renban` 別に入力できる。 |
 | 写真複数枚 | 1 つの `FieldFreshTestStaging` に対して複数の `PhotoAssetTarget` を作成し、カテゴリ・表示順・代表写真を管理できる。 |
@@ -895,7 +991,7 @@ flowchart TD
 | フェーズ | 内容 | ゲート |
 |---|---|---|
 | Phase 0 | 用語・画面名・API 契約を合わせて確定。`FieldTestSession` / `FieldFreshTestStaging` / 写真複数枚設計レビュー。 | 現場一次記録方式レビュー完了。 |
-| Phase 1 | 出荷予定一覧、出荷一覧、`FieldTestSession` 作成/再開。 | 現場記録を開始できる。 |
+| Phase 1 | 4領域の基礎データ同期、出荷予定一覧、出荷実績一覧、`FieldTestSession` 作成/再開。 | 同期済みの出荷予定・出荷実績から現場記録を開始できる。 |
 | Phase 2 | 通常 Fresh 入力、`changedFields` / `clearedFields`、黒板プレビュー、写真複数枚保存。 | 通常取り E2E 合格。写真再送合格。 |
 | Phase 3 | 縦割り `FieldTestSession`、`renban` 別 `FieldFreshTestStaging`、縦割り黒板。 | 縦割り E2E 合格。 |
 | Phase 4 | デスクトップ TP アプリ取込画面、既存 TP 取込、TP 作成後取込、競合確認。 | 取込 E2E / conflict テスト合格。 |
@@ -921,8 +1017,12 @@ flowchart TD
 
 | ローカル DB / 既存アプリ | クラウド / 新設 | 本システムでの扱い |
 |---|---|---|
-| `YoteiDataMain` | `ShippingSchedule` | 出荷予定。試験予定ではない。 |
-| `SyukkaDataMain` | `Shipment` | 1 台ごとの出荷実績。`FieldTestSession` 作成の起点。 |
+| `YoteiDataMain` | `ShippingSchedule` | 出荷予定。同期対象。試験予定ではない。 |
+| `SyukkaDataMain` | `Shipment` | 1 台ごとの出荷実績。`FieldTestSession` 作成の起点。同期対象。 |
+| `Genba` / `Genba_Syukka` | `FieldSite` | 現場マスター。現場情報表示、住所・緯度経度、Google マップ起動で使用する。同期対象。 |
+| `KokubanLayout` | `KokubanLayout` | 黒板レイアウト本体。同期対象。Web 側では読み取り専用。 |
+| `KokubanLayout_Data` | `KokubanLayout_Data` | 黒板レイアウト明細。同期対象。Web レンダリングで使用する。 |
+| `KokubanLayoutSettings` | `KokubanLayoutSettings` | 黒板既定レイアウト・表示設定。同期対象。 |
 | `YoteiData_TpSaisyu` | `SourceLink` / 参考候補 | 出荷予定段階の TP 採取予定フラグ。Web 入力可否の前提にしない。 |
 | `SyukkaData_TpSaisyu` | TP target / `SourceLink` | 出荷実績段階の TP 採取対象。未作成でも `FieldTestSession` は作成可能。 |
 | `TestPieceSaisyu_Main` | `TestPieceSampling` | 正式 TP の親。デスクトップ側作成・取込先。 |
@@ -938,6 +1038,8 @@ flowchart TD
 
 | 用語 | 意味 |
 |---|---|
+| `FieldSite` | 現場マスターをクラウド側で参照するためのデータ。現場名、住所、緯度・経度等を保持する。 |
+| `KokubanLayout` | Ex7000 由来の黒板レイアウト本体。Sync Agent によりクラウドへ同期され、Web 側では読み取り専用で利用する。 |
 | `FieldTestSession` | 出荷実績に紐づく現場一次記録の親。TP 未作成でも作成できる。 |
 | `FieldFreshTestStaging` | 現場で測定したフレッシュ試験値の取込前ステージング。正式 TP の正本ではない。 |
 | `TestPieceSampling` | 基幹システム（ローカル品質DB）側にのみ存在する正式な TP 採取データ。 |
