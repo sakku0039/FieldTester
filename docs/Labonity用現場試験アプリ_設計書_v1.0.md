@@ -73,7 +73,7 @@
 - Web 側は、出荷実績別の現場一次記録（フレッシュ試験値、黒板スナップショット、写真）を保存する。TPデータはクラウド上には一切同期されないため、現場アプリ（Web）側で供試体情報の確認・修正やTPデータの直接照合は行わない。
 - `FreshTestResults` / `FreshTestGroup` は正本テーブルとして作成しない。`FieldFreshTestStaging` も正本ではなく、`import_status` によって正式 TP への取込状態を管理する。
 - 黒板は Ex7000 由来 `KokubanLayout` 系を読み取り専用で利用し、撮影時点の `layout_snapshot_json` / `settings_snapshot_json` / `resolved_values_json` を保存する。
-- 写真本体は Blob Storage に保存し、DB は `PhotoAsset` / `PhotoAssetTarget` / `PhotoBlackboardOverlay` / `AuditLog` などのメタデータに限定する。Base64 で DB保存しない。
+- 写真本体は一度 Blob Storage に保存し、DB は `PhotoAsset` / `PhotoAssetTarget` / `PhotoBlackboardOverlay` / `AuditLog` などのメタデータに限定する。Base64 で DB保存しない。同期エージェント（Sync Agent）経由の取込時にJPEG等の形式でローカルの所定の場所に保存し、クラウド（Blob Storage）上の写真は一定期間（保持期間）経過後に自動削除する。
 - 1 つの `FieldFreshTestStaging` に対して複数の `PhotoAssetTarget` を紐づけられる。写真枚数の上限は DB 設計では固定せず、テナント設定または運用設定で制御する。
 - デスクトップ TP アプリ取込時は `changedFields` / `clearedFields` を尊重し、未入力空白でローカル入力済み値を上書きしない。競合時は自動上書きせず確認対象にする。
 
@@ -375,7 +375,7 @@ stateDiagram-v2
 | 複数 TP 候補あり | 利用者が試験区分、採取日、出荷実績リンク、状態を見て取込先を選択する。 | 自動判定しすぎない。 |
 | 値競合あり | 同一項目がデスクトップ側で既に入力済みかつ Web 値と異なる場合、`conflict` にする。 | 後勝ち自動上書き禁止。 |
 | 取込対象外 | `rejected` として理由を残す。 | 監査・問い合わせ対応のため削除しない。 |
-| 写真あり | `FieldFreshTestStaging` の写真を TP 側ターゲットにも紐づける、または参照リンクを追加する。 | 写真本体は Blob のまま。 |
+| 写真あり | `FieldFreshTestStaging` の写真を TP 側ターゲットにも紐づける、または参照リンクを追加する。 | 写真本体はJPEG等の形式に変換してローカルの所定の場所に保存し、クラウド上のBlobからは一定期間（保持期間）経過後に自動削除する。 |
 
 ### 8.1 取込時の値反映ルール
 
@@ -557,7 +557,8 @@ FieldTestSession
 | commit | Blob 存在確認後に `PhotoAsset` / `PhotoAssetTarget` / `Overlay` を確定。冪等にする。 |
 | 通信断 | IndexedDB に未確定の写真を一時保持し、通信復旧時に自動/手動で確定・commit できる。 |
 | 複数枚保存 | `FieldFreshTestStaging` 1 件に対して `PhotoAssetTarget` N 件を許可。 |
-| 取込後リンク | 正式 TP へ取込後、`linked_tp_sampling_id` によって参照を保持し、基幹システム側で写真を紐づけ可能にする。クラウドDB側にはTP正本テーブルは存在しない。 |
+| 取込後リンク | 正式 TP へ取込後、`linked_tp_sampling_id` によって参照を保持し、基幹システム側でローカル保存されたJPEG等の写真と紐づけ可能にする。クラウドDB側にはTP正本テーブルは存在しない。 |
+| ローカル保存とライフサイクル | 同期エージェント経由でローカル環境へ同期（ダウンロード）された写真は、JPEG等の形式でローカルの所定のディレクトリへ保存する。クラウド上の写真本体（Blob Storage）は、一定期間（例: 30日間など、運用設定による）を経過した後に自動的に削除される。 |
 
 ### 12.1 PhotoAssetTarget 設計
 
@@ -601,7 +602,7 @@ FieldFreshTestStaging(field_fresh_test_id = F-001)
 |---|---|
 | `FieldTestSession` | 現場一次記録の親。`submitted` (確定・保存済み) 以降をデスクトップ取込対象にする。 |
 | `FieldFreshTestStaging` | `renban` 単位。通常 0、縦割り 0〜2。`changedFields` / `clearedFields` を保持。 |
-| `PhotoAsset` / `PhotoAssetTarget` | 写真メタデータ単位。Blob 本体は SAS / commit で管理。 |
+| `PhotoAsset` / `PhotoAssetTarget` | 写真メタデータ単位。Blob本体からローカル環境へ同期（ダウンロードおよびJPEG等への変換）を行い、所定のローカルフォルダに保存する。クラウド上のBlobは一定の保持期間を経過した後に自動削除される。 |
 | `BlackboardInstance` | 撮影時点の黒板スナップショット。 |
 | 取込結果 | デスクトップ側で正式 TP へ反映後、`import_status` と `linked_tp_sampling_id` を更新。 |
 | 競合 | 同一項目に別値がある場合は `conflict` としてクラウドへ返す。自動上書きしない。 |

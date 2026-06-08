@@ -149,7 +149,7 @@
 <li>Web 側は、出荷実績別の現場一次記録（フレッシュ試験値、黒板スナップショット、写真）を保存する。TPデータはクラウド上には一切同期されないため、現場アプリ（Web）側で供試体情報の確認・修正やTPデータの直接照合は行わない。</li>
 <li><code>FreshTestResults</code> / <code>FreshTestGroup</code> は正本テーブルとして作成しない。<code>FieldFreshTestStaging</code> も正本ではなく、<code>import_status</code> によって正式 TP への取込状態を管理する。</li>
 <li>黒板は Ex7000 由来 <code>KokubanLayout</code> 系を読み取り専用で利用し、撮影時点の <code>layout_snapshot_json</code> / <code>settings_snapshot_json</code> / <code>resolved_values_json</code> を保存する。</li>
-<li>写真本体は Blob Storage に保存し、DB は <code>PhotoAsset</code> / <code>PhotoAssetTarget</code> / <code>PhotoBlackboardOverlay</code> / <code>AuditLog</code> などのメタデータに限定する。Base64 で DB保存しない。</li>
+<li>写真本体は一度 Blob Storage に保存し、DB は <code>PhotoAsset</code> / <code>PhotoAssetTarget</code> / <code>PhotoBlackboardOverlay</code> / <code>AuditLog</code> などのメタデータに限定する。Base64 で DB保存しない。同期エージェント（Sync Agent）経由の取込時にJPEG等の形式でローカルの所定の場所に保存し、クラウド（Blob Storage）上の写真は一定期間（保持期間）経過後に自動削除する。</li>
 <li>1 つの <code>FieldFreshTestStaging</code> に対して複数の <code>PhotoAssetTarget</code> を紐づけられる。写真枚数の上限は DB 設計では固定せず、テナント設定または運用設定で制御する。</li>
 <li>デスクトップ TP アプリ取込時は <code>changedFields</code> / <code>clearedFields</code> を尊重し、未入力空白でローカル入力済み値を上書きしない。競合時は自動上書きせず確認対象にする。</li>
 </ul>
@@ -849,7 +849,7 @@
 <tr>
 <td>写真あり</td>
 <td><code>FieldFreshTestStaging</code> の写真を TP 側ターゲットにも紐づける、または参照リンクを追加する。</td>
-<td>写真本体は Blob のまま。</td>
+<td>写真本体はJPEG等の形式に変換してローカルの所定の場所に保存し、クラウド上のBlobからは一定期間（保持期間）経過後に自動削除する。</td>
 </tr>
 </tbody>
 </table>
@@ -1121,7 +1121,11 @@ FieldTestSession
 </tr>
 <tr>
 <td>取込後リンク</td>
-<td>正式 TP へ取込後、<code>linked_tp_sampling_id</code> によって参照を保持し、基幹システム側で写真を紐づけ可能にする。クラウドDB側にはTP正本テーブルは存在しない。</td>
+<td>正式 TP へ取込後、<code>linked_tp_sampling_id</code> によって参照を保持し、基幹システム側でローカル保存されたJPEG等の写真と紐づけ可能にする。クラウドDB側にはTP正本テーブルは存在しない。</td>
+</tr>
+<tr>
+<td>ローカル保存とライフサイクル</td>
+<td>同期エージェント経由でローカル環境へ同期（ダウンロード）された写真は、JPEG等の形式でローカルの所定のディレクトリへ保存する。クラウド上の写真本体（Blob Storage）は、一定期間（例: 30日間など、運用設定による）を経過した後に自動的に削除される。</td>
 </tr>
 </tbody>
 </table>
@@ -1232,7 +1236,7 @@ FieldTestSession
 </tr>
 <tr>
 <td><code>PhotoAsset</code> / <code>PhotoAssetTarget</code></td>
-<td>写真メタデータ単位。Blob 本体は SAS / commit で管理。</td>
+<td>写真メタデータ単位。Blob本体からローカル環境へ同期（ダウンロードおよびJPEG等への変換）を行い、所定のローカルフォルダに保存する。クラウド上のBlobは一定の保持期間を経過した後に自動削除される。</td>
 </tr>
 <tr>
 <td><code>BlackboardInstance</code></td>
