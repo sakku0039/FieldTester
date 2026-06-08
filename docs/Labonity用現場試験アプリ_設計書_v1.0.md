@@ -192,24 +192,7 @@ flowchart LR
 
 ---
 
-## 4. デスクトップ側で作成される TP データと本システムの扱い
-
-出荷管理から作成される TP データは、設定によって段階が変わる。TP 採取データ自動登録が ON であれば、Ex3010 `directSave` 相当で TP 採取結果下書きが作成される。一方、実運用では TP チェック漏れや自動登録 OFF により、現場時点で TP データが存在しない場合がある。
-
-| タイミング/設定 | 作成される主なデータ | 本システムでの扱い |
-|---|---|---|
-| 出荷実績保存時 | `SyukkaDataMain` / `SyukkaData_TpSaisyu` | 出荷実績本体は Web の現場試験記録作成の起点。TP 対象フラグがなくても現場記録は作成可能。 |
-| TP 採取データ自動登録 ON | `TestPieceSaisyu_Main` | 存在すれば取込候補・参考リンクとして表示。Web から親情報は変更しない。 |
-| TP 採取データ自動登録 ON | `TestPieceSaisyu_FreshSiken` | 正式なフレッシュ試験行。本システムでは Web 直接書込の主経路にせず、`FieldFreshTestStaging` から取込する。 |
-| TP 採取データ自動登録 ON | `TestPieceSaisyu_Set` / `Piece` | 供試体セット・ピース初期構成。Web でゼロから作らない。TP 取込後または TP 存在時に確認・軽微修正対象にする。 |
-| TP 採取データ自動登録 ON | `TestPieceSaisyu_SyukkaData` | 出荷実績リンク。取込時に `shipment_id` から既存 TP を特定するために使用。 |
-
-> **設計判断**  
-> 初期リリースでは「TP 採取データ自動登録 ON」を強く推奨する。ただし、現場アプリの主機能はこれを前提にしない。TP データが未作成でも現場一次記録を保存し、後からデスクトップ TP アプリで正式 TP へ取り込めるようにする。
-
----
-
-## 5. 現場アプリで登録・確認する範囲
+## 4. 現場アプリで登録・確認する範囲
 
 | 分類 | 現場アプリで行うこと | 保存先/扱い |
 |---|---|---|
@@ -231,7 +214,7 @@ flowchart LR
 
 ---
 
-## 6. 画面フローと UI イメージ
+## 5. 画面フローと UI イメージ
 
 現場試験アプリでは、出荷実績一覧の後に「現場試験記録」を作成または再開する。TP データの有無は現場側では意識せず、常に出荷実績情報に紐づく現場フレッシュ試験記録として入力・撮影を行う。
 
@@ -258,7 +241,7 @@ flowchart LR
 | `rejected` | 取込対象外として処理済み | 基幹システム |
 | `voided` | 取消済み | 現場・基幹共通 |
 
-### 6.1 画面遷移図
+### 5.1 画面遷移図
 
 ```mermaid
 flowchart TD
@@ -281,7 +264,7 @@ flowchart TD
 
 ---
 
-## 7. FieldTestSession 設計
+## 6. FieldTestSession 設計
 
 `FieldTestSession` は、Web アプリが作成する現場一次記録の親データである。通常は 1 出荷実績に 1 セッション、縦割りでは同一 `yotei_id` 配下の複数出荷実績を 1 セッションに束ねる。
 
@@ -301,7 +284,7 @@ flowchart TD
 | `source_hash` | varchar | 冪等 Upsert・二重登録防止用。 |
 | `created_by` / `created_at` / `updated_at` | user / datetime | 監査用。 |
 
-### 7.1 状態遷移
+### 6.1 状態遷移
 
 ```mermaid
 stateDiagram-v2
@@ -329,7 +312,7 @@ stateDiagram-v2
 
 ---
 
-## 8. FieldFreshTestStaging 設計
+## 7. FieldFreshTestStaging 設計
 
 `FieldFreshTestStaging` は、`FieldTestSession` 配下のフレッシュ試験一次記録である。通常取りでは `renban=0` を 1 件、縦割りでは `renban=0..2` を出荷別に作成する。
 
@@ -357,7 +340,7 @@ stateDiagram-v2
 > **重要: 正本ではない**  
 > `FieldFreshTestStaging` は、取込前の現場一次記録であり、TP 採取結果の正本ではない。正式な品質管理・帳票・後続試験の正本は、デスクトップ TP アプリで取込後に作成または更新される `TestPieceSaisyu_*` / `TestPieceSampling` 系とする。
 
-### 8.1 更新ルール
+### 7.1 更新ルール
 
 | ルール | 内容 |
 |---|---|
@@ -370,7 +353,7 @@ stateDiagram-v2
 
 ---
 
-## 9. デスクトップ TP アプリ取込設計
+## 8. デスクトップ TP アプリ取込設計
 
 デスクトップ TP アプリには、クラウドに送信された `FieldTestSession` / `FieldFreshTestStaging` を確認し、正式な TP 採取データへ反映する「現場記録取込」機能を追加する。
 
@@ -394,7 +377,7 @@ stateDiagram-v2
 | 取込対象外 | `rejected` として理由を残す。 | 監査・問い合わせ対応のため削除しない。 |
 | 写真あり | `FieldFreshTestStaging` の写真を TP 側ターゲットにも紐づける、または参照リンクを追加する。 | 写真本体は Blob のまま。 |
 
-### 9.1 取込時の値反映ルール
+### 8.1 取込時の値反映ルール
 
 | 条件 | 処理 |
 |---|---|
@@ -405,7 +388,7 @@ stateDiagram-v2
 | `clearedFields` に含まれる | 削除候補。既存値削除は確認または権限チェックを挟む。 |
 | Web 値が空白で `changedFields` なし | 未入力扱い。既存値を上書きしない。 |
 
-### 9.2 デスクトップ取込シーケンス
+### 8.2 デスクトップ取込シーケンス
 
 ```mermaid
 sequenceDiagram
@@ -442,7 +425,7 @@ sequenceDiagram
     同期->>現場DB: 取込結果を反映 (imported / conflict / rejected)
 ```
 
-### 9.3 値競合・差分確認の例外処理方針
+### 8.3 値競合・差分確認の例外処理方針
 
 「差分確認」は、通常の流れでは目立たせない例外処理です。基幹 TP アプリ側で TP データを新規に作成して取り込む通常運用ではほとんど発生しませんが、以下の場合に競合解決フロー（`conflict` 状態）が作動します。
 
@@ -452,7 +435,7 @@ sequenceDiagram
 
 ---
 
-## 10. フレッシュ試験入力設計
+## 9. フレッシュ試験入力設計
 
 通常取りは `FieldFreshTestStaging.renban=0` の 1 行を入力する。縦割りは `renban=0..2` の各行に、出荷実績ごとのフレッシュ試験値を入力する。
 
@@ -480,7 +463,7 @@ PATCH /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}/fresh-tests/{renban}
 | 塩化物量 / 単位水量 / 単位容積質量 | 対象運用の場合のみ表示。 |
 | 備考 | 現場事情、再測定理由、取込時の補足。 |
 
-### 10.1 フレッシュ試験登録シーケンス
+### 9.1 フレッシュ試験登録シーケンス
 
 ```mermaid
 sequenceDiagram
@@ -515,7 +498,7 @@ sequenceDiagram
 
 ---
 
-## 11. 縦割り設計
+## 10. 縦割り設計
 
 縦割りは、同一出荷予定内の複数出荷実績を 1 つの `FieldTestSession` にまとめ、フレッシュ試験値を `renban` 別に保持する。正式 TP へ取り込む際、既存の `TestPieceSampling + ShipmentLink + FreshTest` 行の構造へ変換する。
 
@@ -545,7 +528,7 @@ FieldTestSession
 
 ---
 
-## 12. 電子黒板機能設計
+## 11. 電子黒板機能設計
 
 - Ex7000 由来の `KokubanLayout` / `KokubanLayout_Data` / `KokubanLayoutSettings` を読み取り専用で利用する。
 - Web 側には黒板レイアウト作成・編集機能を作らない。
@@ -563,7 +546,7 @@ FieldTestSession
 
 ---
 
-## 13. 写真・Blob 保存設計
+## 12. 写真・Blob 保存設計
 
 写真本体は Blob Storage へ保存し、DB には `PhotoAsset` / `PhotoAssetTarget` / `PhotoBlackboardOverlay` / `AuditLog` などのメタデータを保存する。1 つのフレッシュ試験一次記録に対して複数枚の写真を保存できる。
 
@@ -576,7 +559,7 @@ FieldTestSession
 | 複数枚保存 | `FieldFreshTestStaging` 1 件に対して `PhotoAssetTarget` N 件を許可。 |
 | 取込後リンク | 正式 TP へ取込後、`linked_tp_sampling_id` によって参照を保持し、基幹システム側で写真を紐づけ可能にする。クラウドDB側にはTP正本テーブルは存在しない。 |
 
-### 13.1 PhotoAssetTarget 設計
+### 12.1 PhotoAssetTarget 設計
 
 | 項目 | 説明 |
 |---|---|
@@ -606,7 +589,7 @@ FieldFreshTestStaging(field_fresh_test_id = F-001)
 
 ---
 
-## 14. 同期 Agent 設計
+## 13. 同期 Agent 設計
 
 | 方向 | 方式 | 対象 |
 |---|---|---|
@@ -623,7 +606,7 @@ FieldFreshTestStaging(field_fresh_test_id = F-001)
 | 取込結果 | デスクトップ側で正式 TP へ反映後、`import_status` と `linked_tp_sampling_id` を更新。 |
 | 競合 | 同一項目に別値がある場合は `conflict` としてクラウドへ返す。自動上書きしない。 |
 
-### 14.1 アプリとデータの配置構成 (システム構成図)
+### 13.1 アプリとデータの配置構成 (システム構成図)
 
 ```mermaid
 flowchart LR
@@ -659,7 +642,7 @@ flowchart LR
     基幹TPアプリ --> 基幹DB
 ```
 
-### 14.2 物理配置と利用環境
+### 13.2 物理配置と利用環境
 
 ```mermaid
 flowchart LR
@@ -691,7 +674,7 @@ flowchart LR
 
 ---
 
-## 15. API 設計
+## 14. API 設計
 
 | 分類 | API | 目的 |
 |---|---|---|
@@ -709,7 +692,7 @@ flowchart LR
 | 取込 | `GET /api/sync/v1/orgs/{orgId}/field-test-sessions/import-candidates` | デスクトップ TP アプリが未取込の現場記録を取得。 |
 | 取込 | `POST /api/sync/v1/orgs/{orgId}/field-test-sessions/{sessionId}/import-result` | 取込結果、競合、取込先 TP ID を返す。 |
 
-### 15.1 FieldTestSession 作成リクエスト例
+### 14.1 FieldTestSession 作成リクエスト例
 
 ```http
 POST /api/v1/orgs/{orgId}/field-test-sessions
@@ -727,7 +710,7 @@ POST /api/v1/orgs/{orgId}/field-test-sessions
 
 ---
 
-## 16. データモデル
+## 15. データモデル
 
 | クラウドテーブル | 主な項目 | 対応/備考 |
 |---|---|---|
@@ -741,7 +724,7 @@ POST /api/v1/orgs/{orgId}/field-test-sessions
 | `PhotoAssetTarget` | `photo_asset_id`, `target_type`, `target_id`, `photo_category`, `display_order` | 写真と対象の関連。1 Fresh に N 件。 |
 | `AuditLog` | `action`, `target_type`, `before_json`, `after_json`, `reason`, `actor_id`, `created_at` | 重要操作の監査。 |
 
-### 16.1 主要データモデル クラス図
+### 15.1 主要データモデル クラス図
 
 本図は、現場アプリ側が扱う独自データを中心に表したクラス図です。
 - UMLから「取込管理」クラスを廃止し、取込ステータスや連携先IDは `FieldTestSession` および `FieldFreshTestStaging` に統合しています。
@@ -847,7 +830,7 @@ classDiagram
     写真_PhotoAsset "1" --> "0..*" 写真紐付け_PhotoAssetTarget
 ```
 
-### 16.2 データ関連フロー
+### 15.2 データ関連フロー
 
 ```mermaid
 flowchart TD
@@ -868,7 +851,7 @@ flowchart TD
 
 ---
 
-## 17. 認証・権限・テナント分離
+## 16. 認証・権限・テナント分離
 
 - LibertyAccount の `orgId` を `tenant_id` として扱い、全 API で URL `orgId`・トークン所属 `org`・DB `tenant_id` の一致を確認する。
 - `FieldOperator` は現場記録作成、フレッシュ値入力、写真撮影、黒板保存、現場記録送信を行える。
@@ -890,7 +873,7 @@ flowchart TD
 
 ---
 
-## 18. テスト設計・受入条件
+## 17. テスト設計・受入条件
 
 | テスト | 受入条件 |
 |---|---|
@@ -906,7 +889,7 @@ flowchart TD
 
 ---
 
-## 19. 実装ロードマップ
+## 18. 実装ロードマップ
 
 | フェーズ | 内容 | ゲート |
 |---|---|---|
@@ -919,7 +902,7 @@ flowchart TD
 
 ---
 
-## 20. 未決事項・確認事項
+## 19. 未決事項・確認事項
 
 | No | 確認事項 | 理由 |
 |---|---|---|

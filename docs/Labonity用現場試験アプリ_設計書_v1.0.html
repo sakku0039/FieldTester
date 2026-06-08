@@ -1,0 +1,1935 @@
+<!DOCTYPE html><html><head>
+      <title>Labonity用現場試験アプリ_設計書_v1.0</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\User01\.antigravity-ide\extensions\shd101wyy.markdown-preview-enhanced-0.8.29-universal\crossnote\dependencies\katex\katex.min.css">
+      
+      
+      
+      <script type="text/javascript" src="file:///c:\Users\User01\.antigravity-ide\extensions\shd101wyy.markdown-preview-enhanced-0.8.29-universal\crossnote\dependencies\mermaid\mermaid.min.js" charset="UTF-8"></script>
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-details{margin:0;padding:0;border:none}.markdown-preview .md-toc summary.md-toc-link-wrapper{cursor:pointer;list-style-position:outside}.markdown-preview .md-toc summary.md-toc-link-wrapper::marker{font-size:.85em}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.markdown-preview .md-toc .md-toc-link-wrapper[data-level='0']{margin-left:12px}.markdown-preview .md-toc .md-toc-link-wrapper[data-level='1']{margin-left:28px}.markdown-preview .md-toc .md-toc-link-wrapper[data-level='2']{margin-left:44px}.markdown-preview .md-toc .md-toc-link-wrapper[data-level='3']{margin-left:60px}.markdown-preview .md-toc .md-toc-link-wrapper[data-level='4']{margin-left:76px}.markdown-preview .md-toc .md-toc-link-wrapper[data-level='5']{margin-left:80px}.markdown-preview a.tag,.markdown-preview a.tag:active,.markdown-preview a.tag:link,.markdown-preview a.tag:visited,.markdown-preview span.tag:not(.token){display:inline-block;background-color:var(--vscode-badge-background,rgba(127,127,127,.18));color:var(--vscode-badge-foreground,currentColor);border-radius:2em;font-size:.85em;font-weight:500;padding:.05em .55em;line-height:1.5;white-space:nowrap;text-decoration:none;text-shadow:none;box-shadow:none;transition:background-color .12s ease,opacity .12s ease}.markdown-preview a.tag{cursor:pointer}.markdown-preview a.tag:focus,.markdown-preview a.tag:hover{background-color:var(--vscode-badge-background,rgba(127,127,127,.32));color:var(--vscode-badge-foreground,currentColor);opacity:.85;text-decoration:none;outline:0}.markdown-preview .wikilink-embed-content{border-left:3px solid var(--vscode-textBlockQuote-border,rgba(128,128,128,.3));background:var(--vscode-textBlockQuote-background,rgba(128,128,128,.05));margin:.5em 0;padding:.5em .75em;border-radius:0 3px 3px 0}.markdown-preview .wikilink-embed-content.wikilink-embed-error{border-left-color:var(--vscode-errorForeground,#cf222e);color:var(--vscode-errorForeground,#cf222e);font-style:italic;opacity:.8}.markdown-preview .wikilink-embed-content h1:first-child,.markdown-preview .wikilink-embed-content h2:first-child,.markdown-preview .wikilink-embed-content h3:first-child,.markdown-preview .wikilink-embed-content h4:first-child,.markdown-preview .wikilink-embed-content h5:first-child,.markdown-preview .wikilink-embed-content h6:first-child{margin-top:.25em}.markdown-preview .wikilink-embed-content .wikilink-embed-content{margin:.25em 0;padding:.25em .5em}.markdown-preview .block-id{display:none}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-details{margin:0;padding:0;border:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper[data-level='0']{padding-left:0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper[data-level='1']{padding-left:16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper[data-level='2']{padding-left:32px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper[data-level='3']{padding-left:48px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper[data-level='4']{padding-left:64px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper[data-level='5']{padding-left:80px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script>
+    </head>
+    <body for="html-export">
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="labonity-用現場試験アプリ-設計書">Labonity 用現場試験アプリ 設計書 </h1>
+<p><strong>出荷実績別現場試験記録・フレッシュ試験一次記録・TP 取込連携・写真複数枚保存・黒板・同期 Agent</strong><br>
+<strong>v1.0</strong></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文書区分</td>
+<td>基本設計書</td>
+</tr>
+<tr>
+<td>対象アプリ</td>
+<td>Labonity 用現場試験アプリ</td>
+</tr>
+<tr>
+<td>版</td>
+<td>v1.0</td>
+</tr>
+<tr>
+<td>作成日</td>
+<td>2026-06-08</td>
+</tr>
+<tr>
+<td>概要</td>
+<td>出荷実績に紐づく <code>FieldTestSession</code> / <code>FieldFreshTestStaging</code> に現場一次記録を保存し、デスクトップ TP アプリ側で後から正式 TP へ取り込む方式を採用した基本設計書。現場記録とUML図面を一本化。</td>
+</tr>
+<tr>
+<td>前提</td>
+<td>React + TypeScript PWA / <a href="http://ASP.NET">ASP.NET</a> Core Web API / Azure SQL / Blob Storage / Sync Agent / Ex7000 KokubanLayout / デスクトップ TP アプリ取込機能</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="1-本書の位置づけ">1. 本書の位置づけ </h2>
+<p>本書は、Labonity現場試験アプリにおける基本設計を定義する。<br>
+本システムでは、TP（テストピース）チェック漏れや事務所側でのTPデータ未作成によって現場での試験・写真撮影作業が停止するリスクを排除するため、現場アプリの責務を <strong>「出荷実績に紐づく現場一次記録（フレッシュ試験結果・黒板・写真）の保存」</strong> とする。<br>
+正式な TP 採取データの作成、および現場一次記録の取り込み・帳票連携は、デスクトップ TP アプリ側の責務とする。</p>
+<hr>
+<h2 id="目次">目次 </h2>
+<ul>
+<li><a href="#1-%E6%9C%AC%E6%9B%B8%E3%81%AE%E4%BD%8D%E7%BD%AE%E3%81%A5%E3%81%91">1. 本書の位置づけ</a></li>
+<li><a href="#2-%E8%A8%AD%E8%A8%88%E6%96%B9%E9%87%9D">2. 設計方針</a>
+<ul>
+<li><a href="#21-%E8%B2%AC%E5%8B%99%E5%88%86%E6%8B%85">2.1 責務分担</a></li>
+<li><a href="#22-%E7%8F%BE%E5%A0%B4%E5%9F%BA%E5%B9%B9%E9%80%A3%E6%90%BA%E6%A5%AD%E5%8B%99%E3%83%95%E3%83%AD%E3%83%BC">2.2 現場・基幹連携業務フロー</a></li>
+<li><a href="#23-%E3%83%A6%E3%83%BC%E3%82%B9%E3%82%B1%E3%83%BC%E3%82%B9%E5%9B%B3">2.3 ユースケース図</a></li>
+</ul>
+</li>
+<li><a href="#3-%E7%94%A8%E8%AA%9E%E6%95%B4%E7%90%86">3. 用語整理</a></li>
+<li><a href="#4-%E3%83%87%E3%82%B9%E3%82%AF%E3%83%88%E3%83%83%E3%83%97%E5%81%B4%E3%81%A7%E4%BD%9C%E6%88%90%E3%81%95%E3%82%8C%E3%82%8B-tp-%E3%83%87%E3%83%BC%E3%82%BF%E3%81%A8%E6%9C%AC%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%89%B1%E3%81%84">4. デスクトップ側で作成される TP データと本システムの扱い</a></li>
+<li><a href="#5-%E7%8F%BE%E5%A0%B4%E3%82%A2%E3%83%97%E3%83%AA%E3%81%A7%E7%99%BB%E9%8C%B2%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B%E7%AF%84%E5%9B%B2">5. 現場アプリで登録・確認する範囲</a></li>
+<li><a href="#6-%E7%94%BB%E9%9D%A2%E3%83%95%E3%83%AD%E3%83%BC%E3%81%A8-ui-%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8">6. 画面フローと UI イメージ</a>
+<ul>
+<li><a href="#61-%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3">6.1 画面遷移図</a></li>
+</ul>
+</li>
+<li><a href="#7-fieldtestsession-%E8%A8%AD%E8%A8%88">7. FieldTestSession 設計</a>
+<ul>
+<li><a href="#71-%E7%8A%B6%E6%85%8B%E9%81%B7%E7%A7%BB">7.1 状態遷移</a></li>
+</ul>
+</li>
+<li><a href="#8-fieldfreshteststaging-%E8%A8%AD%E8%A8%88">8. FieldFreshTestStaging 設計</a>
+<ul>
+<li><a href="#81-%E6%9B%B4%E6%96%B0%E3%83%AB%E3%83%BC%E3%83%AB">8.1 更新ルール</a></li>
+</ul>
+</li>
+<li><a href="#9-%E3%83%87%E3%82%B9%E3%82%AF%E3%83%88%E3%83%83%E3%83%97-tp-%E3%82%A2%E3%83%97%E3%83%AA%E5%8F%96%E8%BE%BC%E8%A8%AD%E8%A8%88">9. デスクトップ TP アプリ取込設計</a>
+<ul>
+<li><a href="#91-%E5%8F%96%E8%BE%BC%E6%99%82%E3%81%AE%E5%80%A4%E5%8F%8D%E6%98%A0%E3%83%AB%E3%83%BC%E3%83%AB">9.1 取込時の値反映ルール</a></li>
+<li><a href="#92-%E3%83%87%E3%82%B9%E3%82%AF%E3%83%88%E3%83%83%E3%83%97%E5%8F%96%E8%BE%BC%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B9">9.2 デスクトップ取込シーケンス</a></li>
+<li><a href="#93-%E5%80%A4%E7%AB%B6%E5%90%88%E5%B7%AE%E5%88%86%E7%A2%BA%E8%AA%8D%E3%81%AE%E4%BE%8B%E5%A4%96%E5%87%A6%E7%90%86%E6%96%B9%E9%87%9D">9.3 値競合・差分確認の例外処理方針</a></li>
+</ul>
+</li>
+<li><a href="#10-%E3%83%95%E3%83%AC%E3%83%83%E3%82%B7%E3%83%A5%E8%A9%A6%E9%A8%93%E5%85%A5%E5%8A%9B%E8%A8%AD%E8%A8%88">10. フレッシュ試験入力設計</a>
+<ul>
+<li><a href="#101-%E3%83%95%E3%83%AC%E3%83%83%E3%82%B7%E3%83%A5%E8%A9%A6%E9%A8%93%E7%99%BB%E9%8C%B2%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B9">10.1 フレッシュ試験登録シーケンス</a></li>
+</ul>
+</li>
+<li><a href="#11-%E7%B8%A6%E5%89%B2%E3%82%8A%E8%A8%AD%E8%A8%88">11. 縦割り設計</a></li>
+<li><a href="#12-%E9%9B%BB%E5%AD%90%E9%BB%92%E6%9D%BF%E6%A9%9F%E8%83%BD%E8%A8%AD%E8%A8%88">12. 電子黒板機能設計</a></li>
+<li><a href="#13-%E5%86%99%E7%9C%9Fblob-%E4%BF%9D%E5%AD%98%E8%A8%AD%E8%A8%88">13. 写真・Blob 保存設計</a>
+<ul>
+<li><a href="#131-photoassettarget-%E8%A8%AD%E8%A8%88">13.1 PhotoAssetTarget 設計</a></li>
+</ul>
+</li>
+<li><a href="#14-%E5%90%8C%E6%9C%9F-agent-%E8%A8%AD%E8%A8%88">14. 同期 Agent 設計</a>
+<ul>
+<li><a href="#141-%E3%82%A2%E3%83%97%E3%83%AA%E3%81%A8%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E9%85%8D%E7%BD%AE%E6%A7%8B%E6%88%90-%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E6%A7%8B%E6%88%90%E5%9B%B3">14.1 アプリとデータの配置構成 (システム構成図)</a></li>
+<li><a href="#142-%E7%89%A9%E7%90%86%E9%85%8D%E7%BD%AE%E3%81%A8%E5%88%A9%E7%94%A8%E7%92%B0%E5%A2%83">14.2 物理配置と利用環境</a></li>
+</ul>
+</li>
+<li><a href="#15-api-%E8%A8%AD%E8%A8%88">15. API 設計</a>
+<ul>
+<li><a href="#151-fieldtestsession-%E4%BD%9C%E6%88%90%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E4%BE%8B">15.1 FieldTestSession 作成リクエスト例</a></li>
+</ul>
+</li>
+<li><a href="#16-%E3%83%87%E3%83%BC%E3%82%BF%E3%83%A2%E3%83%87%E3%83%AB">16. データモデル</a>
+<ul>
+<li><a href="#161-%E4%B8%BB%E8%A6%81%E3%83%87%E3%83%BC%E3%82%BF%E3%83%A2%E3%83%87%E3%83%AB-%E3%82%AF%E3%83%A9%E3%82%B9%E5%9B%B3">16.1 主要データモデル クラス図</a></li>
+<li><a href="#162-%E3%83%87%E3%83%BC%E3%82%BF%E9%96%A2%E9%80%A3%E3%83%95%E3%83%AD%E3%83%BC">16.2 データ関連フロー</a></li>
+</ul>
+</li>
+<li><a href="#17-%E8%AA%8D%E8%A8%BC%E6%A8%A9%E9%99%90%E3%83%86%E3%83%8A%E3%83%B3%E3%83%88%E5%88%86%E9%9B%A2">17. 認証・権限・テナント分離</a></li>
+<li><a href="#18-%E3%83%86%E3%82%B9%E3%83%88%E8%A8%AD%E8%A8%88%E5%8F%97%E5%85%A5%E6%9D%A1%E4%BB%B6">18. テスト設計・受入条件</a></li>
+<li><a href="#19-%E5%AE%9F%E8%A3%85%E3%83%AD%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97">19. 実装ロードマップ</a></li>
+<li><a href="#20-%E6%9C%AA%E6%B1%BA%E4%BA%8B%E9%A0%85%E7%A2%BA%E8%AA%8D%E4%BA%8B%E9%A0%85">20. 未決事項・確認事項</a></li>
+<li><a href="#%E4%BB%98%E9%8C%B2-a-%E4%B8%BB%E8%A6%81%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB-db-%E5%AF%BE%E5%BF%9C">付録 A. 主要ローカル DB 対応</a></li>
+<li><a href="#%E4%BB%98%E9%8C%B2-b-%E7%94%A8%E8%AA%9E%E9%9B%86">付録 B. 用語集</a></li>
+</ul>
+<hr>
+<h2 id="2-設計方針">2. 設計方針 </h2>
+<ul>
+<li>現場試験アプリは、出荷予定・出荷実績を選び、<code>FieldTestSession</code> を作成または再開して現場試験記録を保存する PWA とする。</li>
+<li>フレッシュ試験の現場実測値は、初期リリースでは <code>FieldFreshTestStaging</code> に保存する。これは TP 正本ではなく、デスクトップ TP アアプリが取り込むための一次記録である。</li>
+<li>TP 採取対象の業務判定、TP 採取データの正式作成、供試体セット・ピース初期構成、帳票連携は、原則としてデスクトップアプリ / 出荷管理 / Ex3010 / TP アプリ側の責務（基幹システム側）とする。</li>
+<li>Web 側は、出荷実績別の現場一次記録（フレッシュ試験値、黒板スナップショット、写真）を保存する。TPデータはクラウド上には一切同期されないため、現場アプリ（Web）側で供試体情報の確認・修正やTPデータの直接照合は行わない。</li>
+<li><code>FreshTestResults</code> / <code>FreshTestGroup</code> は正本テーブルとして作成しない。<code>FieldFreshTestStaging</code> も正本ではなく、<code>import_status</code> によって正式 TP への取込状態を管理する。</li>
+<li>黒板は Ex7000 由来 <code>KokubanLayout</code> 系を読み取り専用で利用し、撮影時点の <code>layout_snapshot_json</code> / <code>settings_snapshot_json</code> / <code>resolved_values_json</code> を保存する。</li>
+<li>写真本体は Blob Storage に保存し、DB は <code>PhotoAsset</code> / <code>PhotoAssetTarget</code> / <code>PhotoBlackboardOverlay</code> / <code>AuditLog</code> などのメタデータに限定する。Base64 で DB保存しない。</li>
+<li>1 つの <code>FieldFreshTestStaging</code> に対して複数の <code>PhotoAssetTarget</code> を紐づけられる。写真枚数の上限は DB 設計では固定せず、テナント設定または運用設定で制御する。</li>
+<li>デスクトップ TP アプリ取込時は <code>changedFields</code> / <code>clearedFields</code> を尊重し、未入力空白でローカル入力済み値を上書きしない。競合時は自動上書きせず確認対象にする。</li>
+</ul>
+<h3 id="業務フロー">業務フロー </h3>
+<div class="mermaid">flowchart TD
+    subgraph 現場試験アプリ ["現場試験アプリ (Web/Cloud)"]
+        A[出荷予定一覧] --&gt; B[出荷実績一覧]
+        B --&gt; C[現場試験記録を作成/再開]
+        C --&gt; G[フレッシュ試験入力]
+        G --&gt; H[黒板確認]
+        H --&gt; I[写真撮影・保存]
+        I --&gt; J[現場記録送信]
+    end
+
+    subgraph 基幹システム ["基幹システム (Desktop/Local)"]
+        J --&gt; K[同期Agentによる現場記録のローカル同期]
+        K --&gt; L[基幹TPアプリで現場記録の取込処理実行]
+        L --&gt; M[基幹側でのTPデータの作成/特定とフレッシュ試験結果・黒板・写真の正式反映]
+    end
+</div><h3 id="21-責務分担">2.1 責務分担 </h3>
+<table>
+<thead>
+<tr>
+<th>領域</th>
+<th>責務</th>
+<th>主なデータ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>現場試験アプリ</td>
+<td>出荷実績別の現場一次記録を保存する。フレッシュ試験値、黒板、写真、メモ、送信状態を管理する。TP 正本を直接作らない。</td>
+<td><code>FieldTestSession</code> / <code>FieldFreshTestStaging</code> / <code>PhotoAsset</code> / <code>BlackboardInstance</code></td>
+</tr>
+<tr>
+<td>デスクトップ TP アプリ</td>
+<td>現場一次記録を確認し、既存 TP へ取込、または TP データを正式作成して取込する。競合解決と帳票連携を担当する。</td>
+<td><code>TestPieceSaisyu_Main</code> / <code>FreshSiken</code> / <code>Set</code> / <code>Piece</code> / <code>SyukkaData</code></td>
+</tr>
+<tr>
+<td>出荷管理 / 出荷指令</td>
+<td>出荷実績本体、工程検査、TP 対象フラグ、TP 自動登録 ON/OFF、出荷実績時点の判定を管理する。</td>
+<td><code>SyukkaDataMain</code> / <code>SyukkaData_TpSaisyu</code></td>
+</tr>
+<tr>
+<td>Sync Agent</td>
+<td>ローカル→クラウド同期、クラウド→ローカル取込候補の取得、ACK、冪等性、競合状態を管理する。</td>
+<td><code>ExternalIdMapping</code> / <code>source_hash</code> / <code>OutboxEvent</code> / <code>SyncLog</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-現場基幹連携業務フロー">2.2 現場・基幹連携業務フロー </h3>
+<div class="mermaid">flowchart TD
+    subgraph 現場アプリ["現場フレッシュ試験アプリ"]
+        A([開始]) --&gt; B[出荷予定一覧を確認]
+        B --&gt; C[出荷予定を選択]
+        C --&gt; D[出荷実績一覧を確認]
+        D --&gt; E[出荷実績を選択]
+        E --&gt; F[フレッシュ試験を開始または再開]
+        F --&gt; G[フレッシュ試験値を入力]
+        G --&gt; H[黒板データを修正・編集]
+        H --&gt; I[黒板合成で写真を撮影・複数枚保存]
+        I --&gt; J[フレッシュ試験データを保存・確定]
+    end
+
+    subgraph 基幹システム["基幹TPアプリ"]
+        M[基幹TPアプリでTPデータを作成]
+        M --&gt; N[作成したTPデータへフレッシュ試験値を取込]
+        N --&gt; O([完了])
+    end
+
+    J --&gt; M
+</div><h3 id="23-ユースケース図">2.3 ユースケース図 </h3>
+<div class="mermaid">flowchart LR
+    現場担当者((現場担当者))
+    事務所担当者((事務所・品質担当者))
+
+    subgraph 現場アプリ["現場フレッシュ試験アプリ"]
+        UC1([出荷予定を選択])
+        UC2([出荷実績を選択])
+        UC3([フレッシュ試験を開始・再開])
+        UC4([フレッシュ試験値を入力])
+        UC5([黒板データを修正・編集])
+        UC6([黒板合成で写真を撮影・保存])
+        UC7([フレッシュ試験データを確定])
+        UC8([取込結果を確認])
+    end
+
+    subgraph 基幹アプリ["基幹TPアプリ"]
+        TP2([TPデータを作成])
+        TP3([フレッシュ試験値を取込])
+        TP4([再取込時の差分警告を確認])
+    end
+
+    現場担当者 --- UC1
+    現場担当者 --- UC2
+    現場担当者 --- UC3
+    現場担当者 --- UC4
+    現場担当者 --- UC5
+    現場担当者 --- UC6
+    現場担当者 --- UC7
+    現場担当者 --- UC8
+
+    事務所担当者 --- TP2
+    事務所担当者 --- TP3
+    事務所担当者 --- TP4
+
+    UC7 -.確定後に基幹側で取込可能.-&gt; TP3
+    TP3 -.取込結果.-&gt; UC8
+</div><hr>
+<h2 id="3-用語整理">3. 用語整理 </h2>
+<table>
+<thead>
+<tr>
+<th>用語</th>
+<th>定義</th>
+<th>代表テーブル/項目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>出荷予定</td>
+<td>いつ、どの現場へ、どの配合を、どれだけ出荷する予定かを表す上位データ。試験予定ではない。</td>
+<td><code>YoteiDataMain</code> / <code>yotei_id</code> / <code>syukka_yoteibi</code> / <code>yotei_no</code></td>
+</tr>
+<tr>
+<td>出荷実績</td>
+<td>実際の 1 台ごとの出荷データ。車番、出荷時刻、数量、配合、予定 ID を持つ。</td>
+<td><code>SyukkaDataMain</code> / <code>syukka_id</code> / <code>syaban</code></td>
+</tr>
+<tr>
+<td>TP 採取対象</td>
+<td>出荷実績段階で実際に TP 採取対象として扱う情報。チェック漏れや未設定があり得るため、Web はこの有無だけに依存しない。</td>
+<td><code>SyukkaData_TpSaisyu</code></td>
+</tr>
+<tr>
+<td>TP 採取データ</td>
+<td>正式な TP 採取結果データ。デスクトップ TP アプリ / Ex3010 側で作成・管理する正本。</td>
+<td><code>TestPieceSaisyu_Main</code> / <code>TestPieceSampling</code></td>
+</tr>
+<tr>
+<td>現場試験記録</td>
+<td>Web アプリで作成する出荷実績別の現場一次記録。TP 未作成でも作成できる。</td>
+<td><code>FieldTestSession</code></td>
+</tr>
+<tr>
+<td>フレッシュ試験一次記録</td>
+<td>現場で実測したフレッシュ試験値。正式 TP へ取り込む前のステージング。</td>
+<td><code>FieldFreshTestStaging</code></td>
+</tr>
+<tr>
+<td>取込</td>
+<td><code>FieldFreshTestStaging</code> の値を、デスクトップ TP アプリが <code>TestPieceSaisyu_FreshSiken</code> 等へ反映する処理。</td>
+<td><code>import_status</code> / <code>imported_tp_sampling_id</code></td>
+</tr>
+<tr>
+<td>縦割り</td>
+<td>同一出荷予定内の複数出荷実績を 1 つの現場試験記録にまとめ、<code>renban</code> 別にフレッシュ試験値を保持する運用。</td>
+<td><code>FieldTestSession</code> + <code>FieldFreshTestStaging.renban</code></td>
+</tr>
+<tr>
+<td>changedFields</td>
+<td>ユーザーが変更した項目。取込・同期対象を限定する。</td>
+<td><code>changed_fields_json</code></td>
+</tr>
+<tr>
+<td>clearedFields</td>
+<td>ユーザーが明示的に削除した項目。未入力空白とは区別する。</td>
+<td><code>cleared_fields_json</code></td>
+</tr>
+<tr>
+<td>PhotoAssetTarget</td>
+<td>写真と対象データの関連。1 つのフレッシュ試験記録に複数件作成できる。</td>
+<td><code>target_type</code> / <code>target_id</code> / <code>photo_category</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="4-現場アプリで登録確認する範囲">4. 現場アプリで登録・確認する範囲 </h2>
+<table>
+<thead>
+<tr>
+<th>分類</th>
+<th>現場アプリで行うこと</th>
+<th>保存先/扱い</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>現場試験記録作成</td>
+<td>出荷実績を選択し、<code>FieldTestSession</code> を作成または既存セッションを再開する。</td>
+<td><code>FieldTestSession</code></td>
+</tr>
+<tr>
+<td>フレッシュ試験値入力</td>
+<td>スランプ、フロー、空気量、コンクリート温度、外気温、塩化物量、単位水量、単位容積質量などを入力する。</td>
+<td><code>FieldFreshTestStaging</code></td>
+</tr>
+<tr>
+<td>黒板</td>
+<td><code>KokubanLayout</code> を読み取り、<code>FieldFreshTestStaging</code> の値を差し込んでプレビュー・撮影用スナップショットを保存する。</td>
+<td><code>BlackboardInstance</code> / <code>resolved_values_json</code></td>
+</tr>
+<tr>
+<td>写真</td>
+<td>黒板写真、測定状況、測定器、供試体などを複数枚撮影・保存する。</td>
+<td><code>PhotoAsset</code> / <code>PhotoAssetTarget</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="現場アプリで原則やらないこと基幹システム側の責務">現場アプリで原則やらないこと（基幹システム側の責務） </h3>
+<table>
+<thead>
+<tr>
+<th>現場アプリで原則やらないこと</th>
+<th>理由</th>
+<th>範囲</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TP 採取データの正式作成</td>
+<td>供試体構成、材齢、本数、採番、試験区分などのロジックが複雑であり、デスクトップ側の責務とするため。</td>
+<td>基幹システム</td>
+</tr>
+<tr>
+<td><code>TestPieceSaisyu_FreshSiken</code> への直接反映を主経路にすること</td>
+<td>同期・競合・写真紐づけが複雑化するため、取込方式に統一するため。</td>
+<td>基幹システム</td>
+</tr>
+<tr>
+<td>試験区分、配合、現場、出荷実績紐づけの変更</td>
+<td>TP 採取データの根幹情報であり、後続試験・帳票・出荷管理との整合性が崩れるため。</td>
+<td>基幹システム</td>
+</tr>
+<tr>
+<td>TPデータ・供試体情報の確認・軽微修正</td>
+<td>TPデータおよび供試体構成は基幹品質DBのみに存在し、クラウドへは同期されないため。</td>
+<td>基幹システム</td>
+</tr>
+<tr>
+<td>圧縮強度試験結果の入力</td>
+<td>後日の試験室 / 品質管理 / デスクトップ側業務であるため。</td>
+<td>基幹システム</td>
+</tr>
+<tr>
+<td>写真台帳・帳票出力</td>
+<td>デスクトップアプリ側の責務であるため。</td>
+<td>基幹システム</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="5-画面フローと-ui-イメージ">5. 画面フローと UI イメージ </h2>
+<p>現場試験アプリでは、出荷実績一覧の後に「現場試験記録」を作成または再開する。TP データの有無は現場側では意識せず、常に出荷実績情報に紐づく現場フレッシュ試験記録として入力・撮影を行う。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">ステップ</th>
+<th>画面/ブロック</th>
+<th>主な操作</th>
+<th>範囲</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td>出荷予定一覧</td>
+<td>日付・現場・予定 No で出荷予定を選択。</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td>出荷実績一覧</td>
+<td>対象出荷実績を選択。縦割りでは複数出荷実績を選択。</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td>現場試験記録 作成/再開</td>
+<td><code>FieldTestSession</code> を作成。既存未送信・未取込記録があれば再開。</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td>送信・取込状況表示</td>
+<td>下書き、送信済み、取込完了、競合等のステータスを表示する。</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td>フレッシュ試験入力</td>
+<td><code>renban</code> 別に実測値を入力。<code>changedFields</code> / <code>clearedFields</code> 適用。</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td>黒板確認</td>
+<td><code>KokubanLayout</code> を読み取り、現場値を差し込みプレビュー。</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td>写真撮影・保存</td>
+<td>1 つのフレッシュ記録に複数枚の写真を保存。<code>PhotoAssetTarget</code> N 件。</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td>現場記録送信</td>
+<td><code>FieldTestSession</code> を <code>submitted</code> にする。通信断時は IndexedDB に保持。</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td>デスクトップ取込</td>
+<td>未取込一覧から正式 TP へ反映。既存 TP へ取込 / TP 作成して取込 / 競合確認。</td>
+<td>基幹システム</td>
+</tr>
+</tbody>
+</table>
+<h3 id="送信取込状況ステータス">送信・取込状況ステータス </h3>
+<table>
+<thead>
+<tr>
+<th>状態</th>
+<th>意味</th>
+<th>範囲</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>draft</code></td>
+<td>一時保存中（端末内またはクラウド上で編集中）</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td><code>submitted</code></td>
+<td>送信済み（現場入力完了、デスクトップ取込待ち）</td>
+<td>現場試験アプリ</td>
+</tr>
+<tr>
+<td><code>imported</code></td>
+<td>基幹側で取込完了（正式 TP へ取込済み）</td>
+<td>基幹システム</td>
+</tr>
+<tr>
+<td><code>conflict</code></td>
+<td>取込時に同一項目の競合あり</td>
+<td>基幹システム</td>
+</tr>
+<tr>
+<td><code>rejected</code></td>
+<td>取込対象外として処理済み</td>
+<td>基幹システム</td>
+</tr>
+<tr>
+<td><code>voided</code></td>
+<td>取消済み</td>
+<td>現場・基幹共通</td>
+</tr>
+</tbody>
+</table>
+<h3 id="51-画面遷移図">5.1 画面遷移図 </h3>
+<div class="mermaid">flowchart TD
+    A[ログイン] --&gt; B[出荷予定一覧]
+    B --&gt; C[出荷予定詳細]
+    C --&gt; D[出荷実績一覧]
+    D --&gt; E[出荷実績選択]
+    E --&gt; F[フレッシュ試験入力]
+    F --&gt; G[黒板データ編集]
+    G --&gt; H[黒板合成写真撮影]
+    H --&gt; I[確定確認]
+    I --&gt; J[確定完了・取込待ち]
+    J --&gt; K[取込結果確認]
+
+    F --&gt; D戻る[出荷実績を選び直す]
+    D戻る --&gt; D
+    H --&gt; F戻る[入力画面へ戻る]
+    F戻る --&gt; F
+</div><hr>
+<h2 id="6-fieldtestsession-設計">6. FieldTestSession 設計 </h2>
+<p><code>FieldTestSession</code> は、Web アプリが作成する現場一次記録の親データである。通常は 1 出荷実績に 1 セッション、縦割りでは同一 <code>yotei_id</code> 配下の複数出荷実績を 1 セッションに束ねる。</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>型/例</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>field_test_session_id</code></td>
+<td>uuid</td>
+<td>現場試験記録 ID。Web 側の主キー。</td>
+</tr>
+<tr>
+<td><code>tenant_id</code></td>
+<td>uuid</td>
+<td>テナント分離。</td>
+</tr>
+<tr>
+<td><code>yotei_id</code></td>
+<td>uuid</td>
+<td>出荷予定 ID。</td>
+</tr>
+<tr>
+<td><code>primary_shipment_id</code></td>
+<td>uuid</td>
+<td>通常取りの対象出荷実績、または縦割りの代表出荷実績。</td>
+</tr>
+<tr>
+<td><code>is_tatewari</code></td>
+<td>bit</td>
+<td>縦割りかどうか。</td>
+</tr>
+<tr>
+<td><code>field_group_no</code></td>
+<td>int / nullable</td>
+<td>縦割りや再測定グループの表示用番号。</td>
+</tr>
+<tr>
+<td><code>genba_id</code> / <code>haigo_id</code> / <code>plant_id</code></td>
+<td>uuid</td>
+<td>出荷実績から同期された参照値。Web で根幹変更しない。</td>
+</tr>
+<tr>
+<td><code>test_datetime</code></td>
+<td>datetimeoffset</td>
+<td>現場で試験した日時。</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>draft / submitted / imported / conflict / rejected / voided / superseded</td>
+<td>現場記録の状態。</td>
+</tr>
+<tr>
+<td><code>linked_tp_sampling_id</code></td>
+<td>uuid / nullable</td>
+<td>取込先 TP 採取データ ID (基幹側ローカルの参照用キー。クラウド上でテーブル間リレーションは持たない)</td>
+</tr>
+<tr>
+<td><code>imported_at</code> / <code>imported_by</code></td>
+<td>datetime / user</td>
+<td>正式 TP へ取込済みの場合の記録。</td>
+</tr>
+<tr>
+<td><code>source_hash</code></td>
+<td>varchar</td>
+<td>冪等 Upsert・二重登録防止用。</td>
+</tr>
+<tr>
+<td><code>created_by</code> / <code>created_at</code> / <code>updated_at</code></td>
+<td>user / datetime</td>
+<td>監査用。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="61-状態遷移">6.1 状態遷移 </h3>
+<div class="mermaid">stateDiagram-v2
+    [*] --&gt; draft: 新規作成/編集開始
+    draft --&gt; submitted: 現場で確定(送信)
+    draft --&gt; voided: 現場で取消
+    submitted --&gt; imported: 基幹側で取込完了
+    submitted --&gt; conflict: 取込先に別値あり(競合)
+    submitted --&gt; rejected: 取込対象外と判断
+    submitted --&gt; voided: 取引中止等により取消
+    conflict --&gt; imported: 差分確認後に承認・取込
+    conflict --&gt; rejected: 取込しないと判断
+    imported --&gt; superseded: 再測定等により後続記録に置換
+</div><table>
+<thead>
+<tr>
+<th>状態</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>draft</code></td>
+<td>端末内またはクラウド上で編集中。</td>
+</tr>
+<tr>
+<td><code>submitted</code></td>
+<td>現場入力完了、デスクトップ取込待ち。</td>
+</tr>
+<tr>
+<td><code>imported</code></td>
+<td>正式 TP へ取込済み。</td>
+</tr>
+<tr>
+<td><code>conflict</code></td>
+<td>取込時に同一項目の競合あり。</td>
+</tr>
+<tr>
+<td><code>rejected</code></td>
+<td>取込対象外と判断。</td>
+</tr>
+<tr>
+<td><code>voided</code></td>
+<td>誤登録などにより取消。</td>
+</tr>
+<tr>
+<td><code>superseded</code></td>
+<td>再測定などで後続記録に置き換え。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="7-fieldfreshteststaging-設計">7. FieldFreshTestStaging 設計 </h2>
+<p><code>FieldFreshTestStaging</code> は、<code>FieldTestSession</code> 配下のフレッシュ試験一次記録である。通常取りでは <code>renban=0</code> を 1 件、縦割りでは <code>renban=0..2</code> を出荷別に作成する。</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>型/例</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>field_fresh_test_id</code></td>
+<td>uuid</td>
+<td>フレッシュ試験一次記録 ID。</td>
+</tr>
+<tr>
+<td><code>field_test_session_id</code></td>
+<td>uuid</td>
+<td>親の <code>FieldTestSession</code>。</td>
+</tr>
+<tr>
+<td><code>shipment_id</code></td>
+<td>uuid</td>
+<td>対象出荷実績。縦割りでは <code>renban</code> ごとに別出荷実績。</td>
+</tr>
+<tr>
+<td><code>renban</code></td>
+<td>tinyint</td>
+<td>通常 0。縦割りでは 0,1,2。</td>
+</tr>
+<tr>
+<td><code>syaban</code></td>
+<td>nvarchar</td>
+<td>車番。出荷実績から初期値、必要に応じて現場入力値。</td>
+</tr>
+<tr>
+<td><code>test_time</code></td>
+<td>time / nullable</td>
+<td>試験時間。</td>
+</tr>
+<tr>
+<td><code>slump</code> / <code>flow1</code> / <code>flow2</code></td>
+<td>decimal / nullable</td>
+<td>スランプ、フロー。</td>
+</tr>
+<tr>
+<td><code>air</code></td>
+<td>decimal / nullable</td>
+<td>空気量。</td>
+</tr>
+<tr>
+<td><code>concrete_temperature</code></td>
+<td>decimal / nullable</td>
+<td>コンクリート温度。</td>
+</tr>
+<tr>
+<td><code>outside_temperature</code></td>
+<td>decimal / nullable</td>
+<td>外気温。</td>
+</tr>
+<tr>
+<td><code>chloride</code></td>
+<td>decimal / nullable</td>
+<td>塩化物量。</td>
+</tr>
+<tr>
+<td><code>unit_water</code> / <code>unit_volume_mass</code></td>
+<td>decimal / nullable</td>
+<td>単位水量、単位容積質量。</td>
+</tr>
+<tr>
+<td><code>remarks</code></td>
+<td>nvarchar</td>
+<td>現場メモ。</td>
+</tr>
+<tr>
+<td><code>changed_fields_json</code></td>
+<td>json</td>
+<td>ユーザーが変更した項目のみ。</td>
+</tr>
+<tr>
+<td><code>cleared_fields_json</code></td>
+<td>json</td>
+<td>ユーザーが明示削除した項目のみ。</td>
+</tr>
+<tr>
+<td><code>import_status</code></td>
+<td>not_imported / imported / conflict / rejected</td>
+<td>取込状態。</td>
+</tr>
+<tr>
+<td><code>imported_tp_sampling_id</code></td>
+<td>uuid / nullable</td>
+<td>取込先 TP 採取データ。</td>
+</tr>
+<tr>
+<td><code>imported_local_main_id</code></td>
+<td>uniqueidentifier / nullable</td>
+<td>ローカル <code>TestPieceSaisyu_Main.id</code> 等。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>重要: 正本ではない</strong><br>
+<code>FieldFreshTestStaging</code> は、取込前の現場一次記録であり、TP 採取結果の正本ではない。正式な品質管理・帳票・後続試験の正本は、デスクトップ TP アプリで取込後に作成または更新される <code>TestPieceSaisyu_*</code> / <code>TestPieceSampling</code> 系とする。</p>
+</blockquote>
+<h3 id="71-更新ルール">7.1 更新ルール </h3>
+<table>
+<thead>
+<tr>
+<th>ルール</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>changedFields</code></td>
+<td>ユーザーが変更した項目だけを取込候補にする。</td>
+</tr>
+<tr>
+<td><code>clearedFields</code></td>
+<td>ユーザーが明示削除した項目。正式 TP 側も削除候補とするが、取込時に確認可能にする。</td>
+</tr>
+<tr>
+<td>未入力空白</td>
+<td>ローカルまたは既存 TP に値がある場合、空白で上書きしない。</td>
+</tr>
+<tr>
+<td>0</td>
+<td>有効な数値として扱う。未入力とは区別する。</td>
+</tr>
+<tr>
+<td>再測定</td>
+<td>既存記録を直接上書きせず、必要に応じて <code>superseded</code> または <code>voided</code> で履歴を残す。</td>
+</tr>
+<tr>
+<td>二重送信</td>
+<td><code>source_hash</code> / <code>idempotency_key</code> で冪等に処理する。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="8-デスクトップ-tp-アプリ取込設計">8. デスクトップ TP アプリ取込設計 </h2>
+<p>デスクトップ TP アプリには、クラウドに送信された <code>FieldTestSession</code> / <code>FieldFreshTestStaging</code> を確認し、正式な TP 採取データへ反映する「現場記録取込」機能を追加する。</p>
+<h3 id="現場フレッシュ試験記録-取込画面例">現場フレッシュ試験記録 取込画面例 </h3>
+<pre data-role="codeBlock" data-info="text" class="language-text text"><code>未取込:
+- 2026/06/05 10:30 ○○現場 1号車 スランプ 18.0 空気量 4.5 写真 3枚
+- 2026/06/05 11:00 ○○現場 2号車 スランプ 18.5 空気量 4.4 写真 2枚
+
+操作:
+[既存 TP へ取込] [TP データを作成して取込] [差分確認] [対象外にする]
+</code></pre><table>
+<thead>
+<tr>
+<th>ケース</th>
+<th>取込動作</th>
+<th>注意点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>既存 TP あり</td>
+<td><code>shipment_id</code> / <code>yotei_id</code> / <code>syukka_id</code> から既存 <code>TestPieceSaisyu_Main</code> / <code>FreshSiken</code> を特定し、<code>changedFields</code> だけ反映する。</td>
+<td>既存値と異なる場合は競合確認。</td>
+</tr>
+<tr>
+<td>TP なし</td>
+<td>デスクトップ側の既存ロジックで TP データを作成してから、<code>FieldFreshTestStaging</code> を <code>FreshSiken</code> へ反映する。</td>
+<td>Web 側では TP 作成ロジックを持たない。</td>
+</tr>
+<tr>
+<td>複数 TP 候補あり</td>
+<td>利用者が試験区分、採取日、出荷実績リンク、状態を見て取込先を選択する。</td>
+<td>自動判定しすぎない。</td>
+</tr>
+<tr>
+<td>値競合あり</td>
+<td>同一項目がデスクトップ側で既に入力済みかつ Web 値と異なる場合、<code>conflict</code> にする。</td>
+<td>後勝ち自動上書き禁止。</td>
+</tr>
+<tr>
+<td>取込対象外</td>
+<td><code>rejected</code> として理由を残す。</td>
+<td>監査・問い合わせ対応のため削除しない。</td>
+</tr>
+<tr>
+<td>写真あり</td>
+<td><code>FieldFreshTestStaging</code> の写真を TP 側ターゲットにも紐づける、または参照リンクを追加する。</td>
+<td>写真本体は Blob のまま。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="81-取込時の値反映ルール">8.1 取込時の値反映ルール </h3>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th>処理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>changedFields</code> に含まれる + 既存 TP 側が空</td>
+<td>自動反映可能。</td>
+</tr>
+<tr>
+<td><code>changedFields</code> に含まれる + 既存 TP 側が同値</td>
+<td>取込済みにする。</td>
+</tr>
+<tr>
+<td><code>changedFields</code> に含まれる + 既存 TP 側が別値</td>
+<td>競合として差分確認。</td>
+</tr>
+<tr>
+<td><code>changedFields</code> に含まれない</td>
+<td>正式 TP 側を更新しない。</td>
+</tr>
+<tr>
+<td><code>clearedFields</code> に含まれる</td>
+<td>削除候補。既存値削除は確認または権限チェックを挟む。</td>
+</tr>
+<tr>
+<td>Web 値が空白で <code>changedFields</code> なし</td>
+<td>未入力扱い。既存値を上書きしない。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-デスクトップ取込シーケンス">8.2 デスクトップ取込シーケンス </h3>
+<div class="mermaid">sequenceDiagram
+    actor 事務所担当者
+    participant 同期 as 同期エージェント
+    participant 現場DB as "現場アプリ独自DB (Cloud)"
+    participant 取込領域 as "基幹側取込領域 (Local Staging)"
+    participant 基幹アプリ as "基幹TPアプリ (Desktop)"
+    participant 基幹DB as 基幹品質DB
+
+    rect rgb(245, 245, 245)
+        note over 同期,取込領域: 裏側の同期処理 (Sync Agent)
+        同期-&gt;&gt;現場DB: 確定済み(submitted)現場記録を取得
+        現場DB--&gt;&gt;同期: FieldTestSession / FieldFreshTestStaging / 写真・黒板メタデータ
+        同期-&gt;&gt;取込領域: 未取込データとして保存
+    end
+
+    事務所担当者-&gt;&gt;基幹アプリ: 未取込フレッシュ試験を開く
+    基幹アプリ-&gt;&gt;取込領域: 未取込一覧を読込 (GET / candidates)
+    取込領域--&gt;&gt;基幹アプリ: 候補一覧を表示
+    事務所担当者-&gt;&gt;基幹アプリ: 取込対象を選択
+    基幹アプリ-&gt;&gt;基幹DB: TPデータを作成 (未作成の場合)
+    基幹アプリ-&gt;&gt;基幹DB: 作成したTPデータへフレッシュ試験値を取込
+
+    alt 取込先に入力済みの別値がある場合
+        基幹アプリ--&gt;&gt;事務所担当者: 差分を表示して確認 (Conflict)
+        事務所担当者-&gt;&gt;基幹アプリ: 採用する値を選択
+        基幹アプリ-&gt;&gt;基幹DB: 確定値を保存
+    else 差分確認が不要な場合
+        基幹アプリ-&gt;&gt;基幹DB: そのまま保存
+    end
+
+    基幹アプリ-&gt;&gt;取込領域: 取込結果・ステータスを保存
+    同期-&gt;&gt;現場DB: 取込結果を反映 (imported / conflict / rejected)
+</div><h3 id="83-値競合差分確認の例外処理方針">8.3 値競合・差分確認の例外処理方針 </h3>
+<p>「差分確認」は、通常の流れでは目立たせない例外処理です。基幹 TP アプリ側で TP データを新規に作成して取り込む通常運用ではほとんど発生しませんが、以下の場合に競合解決フロー（<code>conflict</code> 状態）が作動します。</p>
+<ul>
+<li><strong>値の乖離</strong>：基幹側で既にスランプ・空気量・温度などが手入力されており、現場アプリの測定値と異なる場合。</li>
+<li><strong>重複・再送</strong>：同一フレッシュ試験が誤って複数回送信・取込された場合。</li>
+<li><strong>削除値の扱い</strong>：現場アプリ側で「明示的に削除された（<code>clearedFields</code>）」項目を、基幹側の既存値からも削除するかどうかの確認。</li>
+</ul>
+<hr>
+<h2 id="9-フレッシュ試験入力設計">9. フレッシュ試験入力設計 </h2>
+<p>通常取りは <code>FieldFreshTestStaging.renban=0</code> の 1 行を入力する。縦割りは <code>renban=0..2</code> の各行に、出荷実績ごとのフレッシュ試験値を入力する。</p>
+<pre data-role="codeBlock" data-info="http" class="language-http http"><code>PATCH /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}/fresh-tests/{renban}
+</code></pre><pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"values"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"slump"</span><span class="token operator">:</span> <span class="token number">18.0</span><span class="token punctuation">,</span>
+    <span class="token property">"air"</span><span class="token operator">:</span> <span class="token number">4.5</span><span class="token punctuation">,</span>
+    <span class="token property">"concreteTemperature"</span><span class="token operator">:</span> <span class="token number">21.5</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"changedFields"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"slump"</span><span class="token punctuation">,</span> <span class="token string">"air"</span><span class="token punctuation">,</span> <span class="token string">"concreteTemperature"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"clearedFields"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre><table>
+<thead>
+<tr>
+<th>入力項目</th>
+<th>扱い</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>スランプ / フロー 1 / フロー 2</td>
+<td>任意入力。フロー平均は必要に応じて表示補助として計算。</td>
+</tr>
+<tr>
+<td>空気量</td>
+<td>0 は有効値。空欄と区別。</td>
+</tr>
+<tr>
+<td>コンクリート温度 / 外気温</td>
+<td>黒板差込対象。小数桁はテナント設定に従う。</td>
+</tr>
+<tr>
+<td>塩化物量 / 単位水量 / 単位容積質量</td>
+<td>対象運用の場合のみ表示。</td>
+</tr>
+<tr>
+<td>備考</td>
+<td>現場事情、再測定理由、取込時の補足。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="91-フレッシュ試験登録シーケンス">9.1 フレッシュ試験登録シーケンス </h3>
+<div class="mermaid">sequenceDiagram
+    actor 現場担当者
+    participant 画面 as 現場アプリ画面
+    participant サーバー as 現場アプリサーバー
+    participant 独自DB as "現場アプリ独自DB (SQL / Cloud)"
+    participant 写真保管 as "写真保管領域 (Blob Storage)"
+    participant 黒板DB as 黒板レイアウトDB
+
+    現場担当者-&gt;&gt;画面: 出荷予定を選択
+    現場担当者-&gt;&gt;画面: 出荷実績を選択
+    画面-&gt;&gt;サーバー: フレッシュ試験開始を依頼
+    サーバー-&gt;&gt;独自DB: FieldTestSession 作成
+    現場担当者-&gt;&gt;画面: フレッシュ試験値を入力
+    画面-&gt;&gt;サーバー: 入力値を保存
+    サーバー-&gt;&gt;独自DB: FieldFreshTestStaging 保存 (renban別)
+    現場担当者-&gt;&gt;画面: 黒板データを修正・編集
+    画面-&gt;&gt;サーバー: 黒板データ編集・プレビューを依頼
+    サーバー-&gt;&gt;黒板DB: レイアウトを読取 (KokubanLayout)
+    サーバー-&gt;&gt;独自DB: BlackboardInstance 保存 (スナップショット)
+    現場担当者-&gt;&gt;画面: 黒板を合成しながら写真を撮影
+    画面-&gt;&gt;サーバー: 写真アップロード準備を依頼 (SAS)
+    サーバー--&gt;&gt;画面: 一時アップロード先(SAS URL)を返す
+    画面-&gt;&gt;写真保管: 写真を保存 (Blob PUT)
+    画面-&gt;&gt;サーバー: 写真保存完了を通知 (Commit)
+    サーバー-&gt;&gt;独自DB: PhotoAsset / PhotoAssetTarget 保存
+    現場担当者-&gt;&gt;画面: データを確定 (送信)
+    画面-&gt;&gt;サーバー: 現場記録送信を依頼
+    サーバー-&gt;&gt;独自DB: FieldTestSession 状態を submitted に更新
+</div><hr>
+<h2 id="10-縦割り設計">10. 縦割り設計 </h2>
+<p>縦割りは、同一出荷予定内の複数出荷実績を 1 つの <code>FieldTestSession</code> にまとめ、フレッシュ試験値を <code>renban</code> 別に保持する。正式 TP へ取り込む際、既存の <code>TestPieceSampling + ShipmentLink + FreshTest</code> 行の構造へ変換する。</p>
+<pre data-role="codeBlock" data-info="text" class="language-text text"><code>縦割り構造:
+FieldTestSession
+ is_tatewari = true
+ yotei_id = 同一予定 No
+ ├─ SessionShipmentLink renban=0, shipment_id=出荷実績 1
+ ├─ SessionShipmentLink renban=1, shipment_id=出荷実績 2
+ ├─ SessionShipmentLink renban=2, shipment_id=出荷実績 3
+ ├─ FieldFreshTestStaging renban=0, 出荷実績 1 の試験値
+ ├─ FieldFreshTestStaging renban=1, 出荷実績 2 の試験値
+ ├─ FieldFreshTestStaging renban=2, 出荷実績 3 の試験値
+ ├─ BlackboardInstance
+ └─ PhotoAssetTarget
+</code></pre><table>
+<thead>
+<tr>
+<th>観点</th>
+<th>扱い</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>親データ</td>
+<td>1 <code>FieldTestSession</code>。</td>
+</tr>
+<tr>
+<td>出荷実績リンク</td>
+<td><code>SessionShipmentLink</code> N 件。<code>renban=0..2</code>。</td>
+</tr>
+<tr>
+<td>Fresh 行</td>
+<td><code>FieldFreshTestStaging</code> N 件。<code>ShipmentLink.renban</code> と対応。</td>
+</tr>
+<tr>
+<td>黒板</td>
+<td>縦割りレイアウトを優先。スランプ_1〜3 などを <code>renban</code> 別に解決。</td>
+</tr>
+<tr>
+<td>写真</td>
+<td><code>FieldTestSession</code> 全体、または個別 <code>FieldFreshTestStaging</code> へ複数枚紐づけ。<code>covered_renbans</code> で複数行対象も表現可能。</td>
+</tr>
+<tr>
+<td>取込</td>
+<td>デスクトップ側で 1 つの <code>TestPieceSampling</code> と複数 <code>FreshSiken</code> 行へ反映。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="11-電子黒板機能設計">11. 電子黒板機能設計 </h2>
+<ul>
+<li>Ex7000 由来の <code>KokubanLayout</code> / <code>KokubanLayout_Data</code> / <code>KokubanLayoutSettings</code> を読み取り専用で利用する。</li>
+<li>Web 側には黒板レイアウト作成・編集機能を作らない。</li>
+<li>TP 未作成時は、<code>FieldFreshTestStaging</code> の値を黒板差込値として使用する。</li>
+<li>TP 取込後も、撮影時点の <code>BlackboardInstance</code> は履歴として保持し、レイアウトや値のスナップショットを変更しない。</li>
+<li>通常 / 縦割りの差込値は <code>renban</code> により解決する。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>差込項目</th>
+<th>解決方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>スランプ_1 / 空気量_1 / 温度_1</td>
+<td><code>FieldFreshTestStaging.renban=0</code> の値。取込後は対応する <code>FreshSiken</code> 値とも照合可能。</td>
+</tr>
+<tr>
+<td>スランプ_2 / 空気量_2 / 温度_2</td>
+<td><code>FieldFreshTestStaging.renban=1</code> の値。</td>
+</tr>
+<tr>
+<td>スランプ_3 / 空気量_3 / 温度_3</td>
+<td><code>FieldFreshTestStaging.renban=2</code> の値。</td>
+</tr>
+<tr>
+<td>車番_1〜3</td>
+<td><code>SessionShipmentLink.renban</code> に対応する <code>Shipment.syaban</code>、または <code>FieldFreshTestStaging.syaban</code>。</td>
+</tr>
+<tr>
+<td>供試体 No / 材齢 / 試験予定日</td>
+<td>現場アプリは TP データを保持しないため、原則として空欄または「未連携」と表示する（基幹システム側での帳票出力・取込時に解決される）。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="12-写真blob-保存設計">12. 写真・Blob 保存設計 </h2>
+<p>写真本体は Blob Storage へ保存し、DB には <code>PhotoAsset</code> / <code>PhotoAssetTarget</code> / <code>PhotoBlackboardOverlay</code> / <code>AuditLog</code> などのメタデータを保存する。1 つのフレッシュ試験一次記録に対して複数枚の写真を保存できる。</p>
+<table>
+<thead>
+<tr>
+<th>処理</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>upload-session 発行</td>
+<td><code>PhotoUploadSession</code> を作成し、<code>original</code> / <code>composed</code> / <code>thumbnail</code> / <code>rendered_blackboard</code> 用の短時間 SAS を返す。</td>
+</tr>
+<tr>
+<td>Blob PUT</td>
+<td>ブラウザから Blob Storage へ直接アップロード。DB に Base64 保存しない。</td>
+</tr>
+<tr>
+<td>commit</td>
+<td>Blob 存在確認後に <code>PhotoAsset</code> / <code>PhotoAssetTarget</code> / <code>Overlay</code> を確定。冪等にする。</td>
+</tr>
+<tr>
+<td>通信断</td>
+<td>IndexedDB に未送信写真を保持し、再送可能にする。</td>
+</tr>
+<tr>
+<td>複数枚保存</td>
+<td><code>FieldFreshTestStaging</code> 1 件に対して <code>PhotoAssetTarget</code> N 件を許可。</td>
+</tr>
+<tr>
+<td>取込後リンク</td>
+<td>正式 TP へ取込後、<code>linked_tp_sampling_id</code> によって参照を保持し、基幹システム側で写真を紐づけ可能にする。クラウドDB側にはTP正本テーブルは存在しない。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="121-photoassettarget-設計">12.1 PhotoAssetTarget 設計 </h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>photo_asset_target_id</code></td>
+<td>関連 ID。</td>
+</tr>
+<tr>
+<td><code>photo_asset_id</code></td>
+<td>写真メタデータ ID。</td>
+</tr>
+<tr>
+<td><code>target_type</code></td>
+<td><code>field_test_session</code> / <code>field_fresh_test</code> / <code>shipment</code>（基幹システム側ローカルではTP等への紐付け情報も管理可能）。</td>
+</tr>
+<tr>
+<td><code>target_id</code></td>
+<td>対象 ID。<code>FieldFreshTestStaging</code> に紐づける場合は <code>field_fresh_test_id</code>。</td>
+</tr>
+<tr>
+<td><code>renban</code></td>
+<td>対象 Fresh 行。縦割り時の検索補助。</td>
+</tr>
+<tr>
+<td><code>covered_renbans</code></td>
+<td>1 枚の写真が複数 <code>renban</code> を含む場合の配列。</td>
+</tr>
+<tr>
+<td><code>photo_category</code></td>
+<td><code>blackboard</code> / <code>slump</code> / <code>flow</code> / <code>air</code> / <code>temperature</code> / <code>chloride</code> / <code>specimen</code> / <code>machine</code> / <code>other</code>。</td>
+</tr>
+<tr>
+<td><code>display_order</code></td>
+<td>同一対象内の表示順。</td>
+</tr>
+<tr>
+<td><code>is_primary</code></td>
+<td>代表写真フラグ。複数枚のうち一覧表示に使う。</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>作成日時。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>設計禁止事項</strong><br>
+<code>FieldFreshTestStaging</code> に <code>photo1_blob_path</code> / <code>photo2_blob_path</code> のような固定列を持たせない。写真は <code>PhotoAssetTarget</code> で N 件関連として表現する。</p>
+</blockquote>
+<h3 id="例-1-つのフレッシュ試験に複数枚の写真">例: 1 つのフレッシュ試験に複数枚の写真 </h3>
+<pre data-role="codeBlock" data-info="text" class="language-text text"><code>FieldFreshTestStaging(field_fresh_test_id = F-001)
+ ├─ PhotoAssetTarget(category=blackboard,   target_type=field_fresh_test, target_id=F-001)
+ ├─ PhotoAssetTarget(category=slump,        target_type=field_fresh_test, target_id=F-001)
+ ├─ PhotoAssetTarget(category=air,          target_type=field_fresh_test, target_id=F-001)
+ └─ PhotoAssetTarget(category=temperature,  target_type=field_fresh_test, target_id=F-001)
+</code></pre><hr>
+<h2 id="13-同期-agent-設計">13. 同期 Agent 設計 </h2>
+<table>
+<thead>
+<tr>
+<th>方向</th>
+<th>方式</th>
+<th>対象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ローカル → クラウド</td>
+<td><code>ExternalIdMapping</code> + <code>source_hash</code> による冪等 Upsert</td>
+<td>出荷予定、出荷実績、TP 採取データ、黒板レイアウト</td>
+</tr>
+<tr>
+<td>クラウド → ローカル</td>
+<td><code>OutboxEvent</code> / Pull API + ACK。ACK まで完了扱いにしない</td>
+<td><code>FieldTestSession</code>、<code>FieldFreshTestStaging</code>、<code>PhotoAsset</code> メタデータ、<code>BlackboardInstance</code>、取込依頼/候補</td>
+</tr>
+<tr>
+<td>ローカル → クラウド</td>
+<td>取込結果 ACK / <code>import_status</code> 更新</td>
+<td><code>imported</code> / <code>conflict</code> / <code>rejected</code> / <code>error</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>同期単位</th>
+<th>扱い</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FieldTestSession</code></td>
+<td>現場一次記録の親。<code>submitted</code> 以降をデスクトップ取込対象にする。</td>
+</tr>
+<tr>
+<td><code>FieldFreshTestStaging</code></td>
+<td><code>renban</code> 単位。通常 0、縦割り 0〜2。<code>changedFields</code> / <code>clearedFields</code> を保持。</td>
+</tr>
+<tr>
+<td><code>PhotoAsset</code> / <code>PhotoAssetTarget</code></td>
+<td>写真メタデータ単位。Blob 本体は SAS / commit で管理。</td>
+</tr>
+<tr>
+<td><code>BlackboardInstance</code></td>
+<td>撮影時点の黒板スナップショット。</td>
+</tr>
+<tr>
+<td>取込結果</td>
+<td>デスクトップ側で正式 TP へ反映後、<code>import_status</code> と <code>linked_tp_sampling_id</code> を更新。</td>
+</tr>
+<tr>
+<td>競合</td>
+<td>同一項目に別値がある場合は <code>conflict</code> としてクラウドへ返す。自動上書きしない。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="131-アプリとデータの配置構成-システム構成図">13.1 アプリとデータの配置構成 (システム構成図) </h3>
+<div class="mermaid">flowchart LR
+    subgraph 現場端末["現場スマホ・タブレット (PWA)"]
+      現場画面[現場アプリ画面]
+      端末保存[("端末内一時保存 IndexedDB")]
+      カメラ[カメラ]
+    end
+
+    subgraph クラウド["クラウド環境"]
+      現場サーバー[現場アプリサーバー]
+      独自データベース[("現場アプリ独自DB Azure SQL")]
+      写真領域[("写真保管領域 Blob Storage")]
+      黒板レイアウト[("黒板レイアウトDB 読み取り専用")]
+    end
+
+    subgraph 事務所["事務所・基幹側"]
+      同期エージェント["同期エージェント 裏方処理"]
+      基幹TPアプリ[基幹TPアプリ]
+      基幹DB[("基幹品質DB")]
+      取込用領域[("取込用ローカル領域")]
+    end
+
+    カメラ --&gt; 現場画面
+    現場画面 --&gt; 端末保存
+    現場画面 --&gt; 現場サーバー
+    現場サーバー --&gt; 独自データベース
+    現場サーバー --&gt; 写真領域
+    現場サーバー --&gt; 黒板レイアウト
+    同期エージェント &lt;--&gt; 現場サーバー
+    同期エージェント --&gt; 取込用領域
+    基幹TPアプリ --&gt; 取込用領域
+    基幹TPアプリ --&gt; 基幹DB
+</div><h3 id="132-物理配置と利用環境">13.2 物理配置と利用環境 </h3>
+<div class="mermaid">flowchart LR
+    subgraph 現場["現場スマホ・タブレット"]
+      ブラウザ["ブラウザ画面 (PWA)"]
+      撮影機能[カメラ撮影]
+      端末内保存[("端末内一時保存 IndexedDB")]
+    end
+
+    subgraph クラウド環境["クラウド環境"]
+      アプリサーバー["現場アプリサーバー API"]
+      クラウドDB[("現場アプリ独自DB")]
+      写真保存[("写真保管領域 Blob Storage")]
+    end
+
+    subgraph 事務所環境["事務所PC・基幹LAN"]
+      同期処理["同期エージェント"]
+      TP画面[基幹TPアプリ]
+      ローカルDB[("基幹品質DB")]
+    end
+
+    ブラウザ -- 通信 --&gt; アプリサーバー
+    ブラウザ -- 写真保存 --&gt; 写真保存
+    アプリサーバー --&gt; クラウドDB
+    同期処理 -- 取込候補の同期 --&gt; アプリサーバー
+    TP画面 --&gt; ローカルDB
+    TP画面 --&gt; 同期処理
+</div><hr>
+<h2 id="14-api-設計">14. API 設計 </h2>
+<table>
+<thead>
+<tr>
+<th>分類</th>
+<th>API</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>出荷予定</td>
+<td><code>GET /api/v1/orgs/{orgId}/shipping-schedules?date=...</code></td>
+<td>出荷予定一覧。</td>
+</tr>
+<tr>
+<td>出荷実績</td>
+<td><code>GET /api/v1/orgs/{orgId}/shipments?date=...&amp;yoteiId=...</code></td>
+<td>出荷実績一覧。</td>
+</tr>
+<tr>
+<td>現場記録</td>
+<td><code>POST /api/v1/orgs/{orgId}/field-test-sessions</code></td>
+<td>出荷実績または複数出荷実績から <code>FieldTestSession</code> を作成。</td>
+</tr>
+<tr>
+<td>現場記録</td>
+<td><code>GET /api/v1/orgs/{orgId}/field-test-sessions?shipmentId=...</code></td>
+<td>出荷実績に紐づく現場記録一覧。未送信・未取込の再開に使用。</td>
+</tr>
+<tr>
+<td>現場記録</td>
+<td><code>GET /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}</code></td>
+<td>現場記録詳細。Fresh、写真、黒板、TP 連携状態を返す。</td>
+</tr>
+<tr>
+<td>Fresh</td>
+<td><code>PATCH /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}/fresh-tests/{renban}</code></td>
+<td><code>renban</code> 別フレッシュ試験一次記録を更新。</td>
+</tr>
+<tr>
+<td>現場記録</td>
+<td><code>POST /api/v1/orgs/{orgId}/field-test-sessions/{sessionId}/submit</code></td>
+<td>現場入力完了。デスクトップ取込待ちへ。</td>
+</tr>
+<tr>
+<td>TP 候補</td>
+<td><code>GET /api/v1/orgs/{orgId}/shipments/{shipmentId}/test-piece-samplings</code></td>
+<td>既存 TP 候補を参考表示。0 件でも業務停止しない。</td>
+</tr>
+<tr>
+<td>黒板</td>
+<td><code>POST /api/v1/orgs/{orgId}/blackboards/preview</code></td>
+<td><code>FieldFreshTestStaging</code> の値で黒板プレビュー。</td>
+</tr>
+<tr>
+<td>写真</td>
+<td><code>POST /api/v1/orgs/{orgId}/photos/upload-session</code></td>
+<td>アップロード SAS 発行。</td>
+</tr>
+<tr>
+<td>写真</td>
+<td><code>POST /api/v1/orgs/{orgId}/photos/{photoId}/commit</code></td>
+<td><code>PhotoAsset</code> 確定。<code>PhotoAssetTarget</code> を複数指定可能。</td>
+</tr>
+<tr>
+<td>取込</td>
+<td><code>GET /api/sync/v1/orgs/{orgId}/field-test-sessions/import-candidates</code></td>
+<td>デスクトップ TP アプリが未取込の現場記録を取得。</td>
+</tr>
+<tr>
+<td>取込</td>
+<td><code>POST /api/sync/v1/orgs/{orgId}/field-test-sessions/{sessionId}/import-result</code></td>
+<td>取込結果、競合、取込先 TP ID を返す。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="141-fieldtestsession-作成リクエスト例">14.1 FieldTestSession 作成リクエスト例 </h3>
+<pre data-role="codeBlock" data-info="http" class="language-http http"><code>POST /api/v1/orgs/{orgId}/field-test-sessions
+</code></pre><pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"yoteiId"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
+  <span class="token property">"shipmentIds"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"shipment-001"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"isTatewari"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token property">"testDatetime"</span><span class="token operator">:</span> <span class="token string">"2026-06-05T10:30:00+09:00"</span><span class="token punctuation">,</span>
+  <span class="token property">"clientRequestId"</span><span class="token operator">:</span> <span class="token string">"device-uuid:20260605:001"</span>
+<span class="token punctuation">}</span>
+</code></pre><hr>
+<h2 id="15-データモデル">15. データモデル </h2>
+<table>
+<thead>
+<tr>
+<th>クラウドテーブル</th>
+<th>主な項目</th>
+<th>対応/備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ShippingSchedule</code></td>
+<td><code>yotei_id</code>, <code>syukka_yoteibi</code>, <code>yotei_no</code>, <code>genba_id</code>, <code>haigo_id</code></td>
+<td><code>YoteiDataMain</code> 相当。</td>
+</tr>
+<tr>
+<td><code>Shipment</code></td>
+<td><code>syukka_id</code>, <code>yotei_id</code>, <code>syukka_zikoku</code>, <code>syaban</code>, <code>syukkaryo</code></td>
+<td><code>SyukkaDataMain</code> 相当。現場記録の起点。</td>
+</tr>
+<tr>
+<td><code>FieldTestSession</code></td>
+<td><code>field_test_session_id</code>, <code>shipment_id</code>, <code>yotei_id</code>, <code>status</code>, <code>linked_tp_sampling_id</code></td>
+<td>Web 側の現場一次記録親。新規。 <code>linked_tp_sampling_id</code> はクラウド上ではリレーションを持たない。</td>
+</tr>
+<tr>
+<td><code>FieldTestSessionShipmentLink</code></td>
+<td><code>field_test_session_id</code>, <code>renban</code>, <code>shipment_id</code></td>
+<td>縦割り用。通常取りでも検索補助として 1 件作成可。</td>
+</tr>
+<tr>
+<td><code>FieldFreshTestStaging</code></td>
+<td><code>field_fresh_test_id</code>, <code>field_test_session_id</code>, <code>renban</code>, <code>slump</code>, <code>air</code>, <code>changed_fields_json</code></td>
+<td>フレッシュ試験一次記録。正本ではない。新規。</td>
+</tr>
+<tr>
+<td><code>BlackboardInstance</code></td>
+<td><code>target_type</code>, <code>target_id</code>, <code>layout_snapshot_json</code>, <code>resolved_values_json</code></td>
+<td>撮影時点の黒板スナップショット。</td>
+</tr>
+<tr>
+<td><code>PhotoAsset</code></td>
+<td><code>blob_path</code>, <code>thumbnail_path</code>, <code>hash</code>, <code>taken_at</code>, <code>device_info</code></td>
+<td>写真メタデータ。</td>
+</tr>
+<tr>
+<td><code>PhotoAssetTarget</code></td>
+<td><code>photo_asset_id</code>, <code>target_type</code>, <code>target_id</code>, <code>photo_category</code>, <code>display_order</code></td>
+<td>写真と対象の関連。1 Fresh に N 件。</td>
+</tr>
+<tr>
+<td><code>AuditLog</code></td>
+<td><code>action</code>, <code>target_type</code>, <code>before_json</code>, <code>after_json</code>, <code>reason</code>, <code>actor_id</code>, <code>created_at</code></td>
+<td>重要操作の監査。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="151-主要データモデル-クラス図">15.1 主要データモデル クラス図 </h3>
+<p>本図は、現場アプリ側が扱う独自データを中心に表したクラス図です。</p>
+<ul>
+<li>UMLから「取込管理」クラスを廃止し、取込ステータスや連携先IDは <code>FieldTestSession</code> および <code>FieldFreshTestStaging</code> に統合しています。</li>
+<li>各クラス名には、対応するデータベースの物理テーブル名を括弧書きで明記しています。</li>
+</ul>
+<div class="mermaid">classDiagram
+    class 出荷予定_ShippingSchedule {
+      +UUID yotei_id
+      +Date syukka_yoteibi
+      +String yotei_no
+      +UUID genba_id
+      +UUID haigo_id
+      +UUID plant_id
+    }
+
+    class 出荷実績_Shipment {
+      +UUID syukka_id
+      +UUID yotei_id
+      +DateTime syukka_zikoku
+      +String syaban
+      +Decimal syukkaryo
+    }
+
+    class フレッシュ試験セッション_FieldTestSession {
+      +UUID field_test_session_id
+      +UUID tenant_id
+      +UUID yotei_id
+      +UUID primary_shipment_id
+      +Boolean is_tatewari
+      +Integer field_group_no
+      +DateTime test_datetime
+      +String status
+      +UUID linked_tp_sampling_id
+      +DateTime imported_at
+      +String imported_by
+      +String source_hash
+    }
+
+    class セッション出荷明細_FieldTestSessionShipmentLink {
+      +UUID field_test_session_id
+      +Integer renban
+      +UUID shipment_id
+    }
+
+    class フレッシュ試験記録_FieldFreshTestStaging {
+      +UUID field_fresh_test_id
+      +UUID field_test_session_id
+      +UUID shipment_id
+      +Integer renban
+      +String syaban
+      +Time test_time
+      +Decimal slump
+      +Decimal flow1
+      +Decimal flow2
+      +Decimal air
+      +Decimal concrete_temperature
+      +Decimal outside_temperature
+      +Decimal chloride
+      +Decimal unit_water
+      +Decimal unit_volume_mass
+      +String remarks
+      +JSON changed_fields_json
+      +JSON cleared_fields_json
+      +String import_status
+      +UUID imported_tp_sampling_id
+    }
+
+    class 黒板スナップショット_BlackboardInstance {
+      +String target_type
+      +UUID target_id
+      +JSON layout_snapshot_json
+      +JSON resolved_values_json
+    }
+
+    class 写真_PhotoAsset {
+      +UUID photo_asset_id
+      +String blob_path
+      +String thumbnail_path
+      +String hash
+      +DateTime taken_at
+      +String device_info
+    }
+
+    class 写真紐付け_PhotoAssetTarget {
+      +UUID photo_asset_target_id
+      +UUID photo_asset_id
+      +String target_type
+      +UUID target_id
+      +String photo_category
+      +Integer display_order
+      +Boolean is_primary
+    }
+
+    出荷予定_ShippingSchedule "1" --&gt; "0..*" 出荷実績_Shipment
+    出荷予定_ShippingSchedule "1" --&gt; "0..*" フレッシュ試験セッション_FieldTestSession
+    フレッシュ試験セッション_FieldTestSession "1" --&gt; "1..*" セッション出荷明細_FieldTestSessionShipmentLink
+    出荷実績_Shipment "1" --&gt; "0..*" セッション出荷明細_FieldTestSessionShipmentLink
+    フレッシュ試験セッション_FieldTestSession "1" --&gt; "1..*" フレッシュ試験記録_FieldFreshTestStaging
+    出荷実績_Shipment "1" --&gt; "0..*" フレッシュ試験記録_FieldFreshTestStaging
+    フレッシュ試験記録_FieldFreshTestStaging "1" --&gt; "0..*" 黒板スナップショット_BlackboardInstance
+    フレッシュ試験記録_FieldFreshTestStaging "1" --&gt; "0..*" 写真紐付け_PhotoAssetTarget
+    写真_PhotoAsset "1" --&gt; "0..*" 写真紐付け_PhotoAssetTarget
+</div><h3 id="152-データ関連フロー">15.2 データ関連フロー </h3>
+<div class="mermaid">flowchart TD
+    subgraph 現場試験アプリ ["現場試験アプリ (Web/Cloud)"]
+        A[出荷予定] --&gt;|1件の予定に対して複数| B[出荷実績]
+        B --&gt;|選択して開始| C[フレッシュ試験セッション]
+        C --&gt;|通常は1件・縦割りは複数| D[フレッシュ試験記録]
+        D --&gt;|撮影時点の表示内容| E[黒板スナップショット]
+        D --&gt;|複数枚| F[写真紐付け / 写真]
+    end
+
+    subgraph 基幹システム ["基幹システム (Desktop/Local)"]
+        G[基幹TPデータ] --&gt;|取込| H[正式フレッシュ試験値]
+    end
+
+    C --&gt;|同期エージェント経由で取得| G
+</div><hr>
+<h2 id="16-認証権限テナント分離">16. 認証・権限・テナント分離 </h2>
+<ul>
+<li>LibertyAccount の <code>orgId</code> を <code>tenant_id</code> として扱い、全 API で URL <code>orgId</code>・トークン所属 <code>org</code>・DB <code>tenant_id</code> の一致を確認する。</li>
+<li><code>FieldOperator</code> は現場記録作成、フレッシュ値入力、写真撮影、黒板保存、現場記録送信を行える。</li>
+<li><code>FieldOperator</code> は TP 正本作成、出荷紐づけ変更、試験区分 / 配合 / 現場変更、供試体構成変更を行えない。</li>
+<li><code>QualityManager</code> は現場記録の確認、必要に応じた取込差分の確認、競合解決を行える（供試体情報の確認・修正は基幹システム側で行う）。</li>
+<li><code>TenantAdmin</code> / 事務所側はデスクトップ TP アプリでの TP 作成、取込、対象外処理、出荷紐づけ見直しを行う。</li>
+<li><code>SyncAgent</code> は同期 API 専用とし、画面ログインや他テナント参照は不可にする。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>FieldOperator</th>
+<th>QualityManager</th>
+<th>TenantAdmin / 事務所側</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>現場記録作成</td>
+<td>可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>フレッシュ値入力</td>
+<td>可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>写真撮影・追加</td>
+<td>可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>現場記録送信</td>
+<td>可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>正式 TP への取込</td>
+<td>不可</td>
+<td>権限付き可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>TP データ作成して取込</td>
+<td>不可</td>
+<td>原則不可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>競合解決</td>
+<td>不可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>試験区分 / 配合 / 現場変更</td>
+<td>不可</td>
+<td>不可</td>
+<td>デスクトップ側修正を基本</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="17-テスト設計受入条件">17. テスト設計・受入条件 </h2>
+<table>
+<thead>
+<tr>
+<th>テスト</th>
+<th>受入条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fresh 更新</td>
+<td><code>renban</code> 別 <code>changedFields</code> / <code>clearedFields</code> で更新でき、未入力空白で上書きしない。</td>
+</tr>
+<tr>
+<td>縦割り</td>
+<td>同一 <code>yotei_id</code> の複数出荷実績を 1 つの <code>FieldTestSession</code> として開き、<code>FieldFreshTestStaging</code> を <code>renban</code> 別に入力できる。</td>
+</tr>
+<tr>
+<td>写真複数枚</td>
+<td>1 つの <code>FieldFreshTestStaging</code> に対して複数の <code>PhotoAssetTarget</code> を作成し、カテゴリ・表示順・代表写真を管理できる。</td>
+</tr>
+<tr>
+<td>通信断</td>
+<td>IndexedDB に未送信の現場記録・写真が残り、再送・commit できる。</td>
+</tr>
+<tr>
+<td>デスクトップ取込</td>
+<td>未取込一覧に表示され、既存のローカルTPデータへ取込、またはTPデータを基幹側で新規作成して取込処理が行えること。</td>
+</tr>
+<tr>
+<td>競合</td>
+<td>基幹側ローカルTPデータに既に別値がある場合、自動上書きせず競合状態として確認できること。</td>
+</tr>
+<tr>
+<td>黒板</td>
+<td>現場試験記録の値を元に黒板を表示し、撮影時点のスナップショットを保存できること。</td>
+</tr>
+<tr>
+<td>スコープ</td>
+<td>Webアプリから基幹品質DB側の正式TPデータの作成・更新、供試体構成の編集、圧縮強度結果入力等が物理的に行えないこと（DB非配置のため）。</td>
+</tr>
+<tr>
+<td>監査</td>
+<td>取込、競合解決、対象外、void、写真削除など重要操作が <code>AuditLog</code> に残る。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="18-実装ロードマップ">18. 実装ロードマップ </h2>
+<table>
+<thead>
+<tr>
+<th>フェーズ</th>
+<th>内容</th>
+<th>ゲート</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 0</td>
+<td>用語・画面名・API 契約を合わせて確定。<code>FieldTestSession</code> / <code>FieldFreshTestStaging</code> / 写真複数枚設計レビュー。</td>
+<td>現場一次記録方式レビュー完了。</td>
+</tr>
+<tr>
+<td>Phase 1</td>
+<td>出荷予定一覧、出荷一覧、<code>FieldTestSession</code> 作成/再開。</td>
+<td>現場記録を開始できる。</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td>通常 Fresh 入力、<code>changedFields</code> / <code>clearedFields</code>、黒板プレビュー、写真複数枚保存。</td>
+<td>通常取り E2E 合格。写真再送合格。</td>
+</tr>
+<tr>
+<td>Phase 3</td>
+<td>縦割り <code>FieldTestSession</code>、<code>renban</code> 別 <code>FieldFreshTestStaging</code>、縦割り黒板。</td>
+<td>縦割り E2E 合格。</td>
+</tr>
+<tr>
+<td>Phase 4</td>
+<td>デスクトップ TP アプリ取込画面、既存 TP 取込、TP 作成後取込、競合確認。</td>
+<td>取込 E2E / conflict テスト合格。</td>
+</tr>
+<tr>
+<td>Phase 5</td>
+<td>Outbox / ACK、取込結果同期、監査ログ、運用ダッシュボード、未取込一覧。</td>
+<td>同期一部失敗・再送・取込漏れ検知テスト合格。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="19-未決事項確認事項">19. 未決事項・確認事項 </h2>
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>確認事項</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O-01</td>
+<td>デスクトップ TP アプリの取込画面を既存 Ex3010 に組み込むか、別画面 / 別ツールにするか。</td>
+<td>取込運用と既存画面改修範囲を確定するため。</td>
+</tr>
+<tr>
+<td>O-02</td>
+<td>TP データが既に存在する場合、将来的に Web から即時反映を許可するか。</td>
+<td>初期リリースでは <code>FieldFreshTestStaging</code> に統一するが、将来の効率化余地がある。</td>
+</tr>
+<tr>
+<td>O-03</td>
+<td>1 つのフレッシュ試験に許可する写真枚数の運用上限。</td>
+<td>DB では固定上限なし。容量・通信・UI の観点でテナント設定が必要。</td>
+</tr>
+<tr>
+<td>O-04</td>
+<td>写真カテゴリの必須/任意設定。</td>
+<td>黒板写真必須、測定器写真任意などの会社別運用差を吸収するため。</td>
+</tr>
+<tr>
+<td>O-05</td>
+<td>供試体情報確認・軽微修正を TP 取込前にどこまで許可するか。</td>
+<td>現場アプリ側では供試体情報確認・修正は行わない方針で確定。</td>
+</tr>
+<tr>
+<td>O-06</td>
+<td>取込後の写真ターゲットを追加リンク方式にするか、<code>FieldTestSession</code> リンクのみで参照するか。</td>
+<td>写真検索・帳票連携・重複表示の仕様を確定するため。</td>
+</tr>
+<tr>
+<td>O-07</td>
+<td>未取込の現場記録に対する通知 / リマインド方法。</td>
+<td>取込忘れを防ぐため。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="付録-a-主要ローカル-db-対応">付録 A. 主要ローカル DB 対応 </h2>
+<table>
+<thead>
+<tr>
+<th>ローカル DB / 既存アプリ</th>
+<th>クラウド / 新設</th>
+<th>本システムでの扱い</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>YoteiDataMain</code></td>
+<td><code>ShippingSchedule</code></td>
+<td>出荷予定。試験予定ではない。</td>
+</tr>
+<tr>
+<td><code>SyukkaDataMain</code></td>
+<td><code>Shipment</code></td>
+<td>1 台ごとの出荷実績。<code>FieldTestSession</code> 作成の起点。</td>
+</tr>
+<tr>
+<td><code>YoteiData_TpSaisyu</code></td>
+<td><code>SourceLink</code> / 参考候補</td>
+<td>出荷予定段階の TP 採取予定フラグ。Web 入力可否の前提にしない。</td>
+</tr>
+<tr>
+<td><code>SyukkaData_TpSaisyu</code></td>
+<td>TP target / <code>SourceLink</code></td>
+<td>出荷実績段階の TP 採取対象。未作成でも <code>FieldTestSession</code> は作成可能。</td>
+</tr>
+<tr>
+<td><code>TestPieceSaisyu_Main</code></td>
+<td><code>TestPieceSampling</code></td>
+<td>正式 TP の親。デスクトップ側作成・取込先。</td>
+</tr>
+<tr>
+<td><code>TestPieceSaisyu_FreshSiken</code></td>
+<td><code>TestPieceSamplingFreshTest</code></td>
+<td>正式 TP の Fresh 行。<code>FieldFreshTestStaging</code> から取込。</td>
+</tr>
+<tr>
+<td><code>TestPieceSaisyu_Set</code></td>
+<td><code>TestSet</code></td>
+<td>供試体セット。TP 存在/取込後の確認・軽微修正対象。</td>
+</tr>
+<tr>
+<td><code>TestPieceSaisyu_Piece</code></td>
+<td><code>TestPiece</code></td>
+<td>供試体ピース。TP 存在/取込後の確認・軽微修正対象。</td>
+</tr>
+<tr>
+<td>なし</td>
+<td><code>FieldTestSession</code></td>
+<td>Web で作る現場一次記録の親。新設。</td>
+</tr>
+<tr>
+<td>なし</td>
+<td><code>FieldFreshTestStaging</code></td>
+<td>Web で作るフレッシュ試験一次記録。新設。正本ではない。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="付録-b-用語集">付録 B. 用語集 </h2>
+<table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FieldTestSession</code></td>
+<td>出荷実績に紐づく現場一次記録の親。TP 未作成でも作成できる。</td>
+</tr>
+<tr>
+<td><code>FieldFreshTestStaging</code></td>
+<td>現場で測定したフレッシュ試験値の取込前ステージング。正式 TP の正本ではない。</td>
+</tr>
+<tr>
+<td><code>TestPieceSampling</code></td>
+<td>基幹システム（ローカル品質DB）側にのみ存在する正式な TP 採取データ。</td>
+</tr>
+<tr>
+<td>取込</td>
+<td><code>FieldFreshTestStaging</code> をデスクトップ TP アプリが正式 TP へ反映する処理。</td>
+</tr>
+<tr>
+<td><code>import_status</code></td>
+<td><code>not_imported</code> / <code>imported</code> / <code>conflict</code> / <code>rejected</code> などの取込状態。</td>
+</tr>
+<tr>
+<td><code>PhotoAssetTarget</code></td>
+<td>写真と対象データの関連。1 つのフレッシュ記録に複数枚の写真を紐づける。</td>
+</tr>
+<tr>
+<td><code>photo_category</code></td>
+<td><code>blackboard</code> / <code>slump</code> / <code>air</code> / <code>temperature</code> など写真種別。</td>
+</tr>
+<tr>
+<td><code>superseded</code></td>
+<td>再測定等により後続記録に置き換えられた状態。削除せず履歴を残す。</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+      
+      
+    
+    
+    <script type="module">
+// TODO: If ZenUML gets integrated into mermaid in the future,
+//      we can remove the following lines.
+
+
+var MERMAID_CONFIG = ({"startOnLoad":false});
+if (typeof MERMAID_CONFIG !== 'undefined') {
+  MERMAID_CONFIG.startOnLoad = false
+  MERMAID_CONFIG.cloneCssStyles = false
+  MERMAID_CONFIG.theme = "default"
+}
+
+mermaid.initialize(MERMAID_CONFIG || {})
+if (typeof(window['Reveal']) !== 'undefined') {
+  function mermaidRevealHelper(event) {
+    var currentSlide = event.currentSlide
+    var diagrams = currentSlide.querySelectorAll('div.mermaid')
+    for (var i = 0; i < diagrams.length; i++) {
+      var diagram = diagrams[i]
+      if (!diagram.hasAttribute('data-processed')) {
+        mermaid.init(null, diagram, ()=> {
+          Reveal.slide(event.indexh, event.indexv)
+        })
+      }
+    }
+  }
+  Reveal.addEventListener('slidetransitionend', mermaidRevealHelper)
+  Reveal.addEventListener('ready', mermaidRevealHelper)
+  await mermaid.run({
+    nodes: document.querySelectorAll('div.mermaid')
+  })
+} else {
+  await mermaid.run({
+    nodes: document.querySelectorAll('div.mermaid')
+  })
+}
+</script>
+    
+    
+    
+  
+    </body></html>
