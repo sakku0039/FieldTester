@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "FieldTester.AppHost/FieldTester.AppHost.csproj"
+  }
+}

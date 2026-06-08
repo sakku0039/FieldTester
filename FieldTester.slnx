@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="FieldTester.AppHost/FieldTester.AppHost.csproj" />
+  <Project Path="FieldTester.Server/FieldTester.Server.csproj" />
+  <Project Path="frontend/frontend.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
