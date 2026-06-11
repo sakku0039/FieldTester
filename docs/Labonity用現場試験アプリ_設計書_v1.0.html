@@ -163,7 +163,6 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
 <li>出荷実績詳細の確認</li>
 <li>現場住所から Google Maps を開く</li>
 <li>出荷実績に紐づく写真の追加</li>
-<li>出荷実績がまだクラウド未同期の場合の仮写真登録</li>
 <li>端末カメラによる撮影</li>
 <li>端末内写真の選択</li>
 <li>写真のプレビュー確認</li>
@@ -253,7 +252,6 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
 <li>現場アプリから基幹データへ書き戻しは行わない。</li>
 <li>写真本体はクラウド Blob Storage に保存する。</li>
 <li>写真メタデータは、Labonity / デスクトップ側が参照できるよう、ローカル参照用テーブルへ同期する。</li>
-<li>未解決の仮写真がある場合、出荷実績同期後に <code>pending_shipment</code> から <code>shipment</code> へ解決する。</li>
 </ul>
 <hr>
 <h2 id="2-全体構成">2. 全体構成 </h2>
@@ -319,7 +317,6 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
         C1["FieldSite"]
         C2["ShippingSchedule"]
         C3["Shipment"]
-        C4["PendingPhotoTarget"]
         C5["PhotoAsset"]
         C6["PhotoAssetTarget"]
         C7["PhotoReferenceEvent"]
@@ -351,7 +348,6 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
     Agent --&gt;|単方向 Upsert| C1
     Agent --&gt;|単方向 Upsert| C2
     Agent --&gt;|単方向 Upsert| C3
-    Agent --&gt;|仮写真解決| C4
 
     C1 --&gt; A1
     C2 --&gt; A1
@@ -586,7 +582,7 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
 </tr>
 <tr>
 <td><code>FieldTest:Admin:Manage</code></td>
-<td>管理設定、手動再同期、未解決仮写真の確認。</td>
+<td>管理設定、手動再同期、同期状況の確認。</td>
 </tr>
 </tbody>
 </table>
@@ -649,7 +645,7 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
 </tr>
 <tr>
 <td>監査</td>
-<td>import、event pull、ack、pending resolve をすべて AuditLog に記録する。</td>
+<td>import、event pull、ack をすべて AuditLog に記録する。</td>
 </tr>
 </tbody>
 </table>
@@ -725,11 +721,6 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
 <td>写真メタデータ</td>
 <td>クラウド → ローカル参照テーブル</td>
 <td>デスクトップ / Labonity 側で写真有無を判定する。</td>
-</tr>
-<tr>
-<td>仮写真解決</td>
-<td>Sync Agent → クラウド</td>
-<td>出荷実績未同期時の仮写真を正式な出荷実績へ解決する。</td>
 </tr>
 </tbody>
 </table>
@@ -1113,116 +1104,58 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
 <td>写真メタデータイベント</td>
 <td>1〜5分、またはデスクトップ側確認前に手動取得。</td>
 </tr>
-<tr>
-<td>仮写真解決</td>
-<td>出荷実績同期後すぐ。</td>
-</tr>
 </tbody>
 </table>
 <hr>
-<h2 id="5-出荷実績未同期時の仮写真設計">5. 出荷実績未同期時の仮写真設計 </h2>
+<h2 id="5-出荷実績未同期時の扱い">5. 出荷実績未同期時の扱い </h2>
 <h3 id="51-基本方針">5.1 基本方針 </h3>
-<p>現場では、写真を撮りたい時点で出荷実績がまだクラウドに同期されていないことがある。その場合でも、予定・日付・工場・車番・時刻などの情報を使って仮写真として保存できる。</p>
-<p>仮写真は、出荷実績同期後に Sync Agent が正式な <code>Shipment</code> へ解決する。</p>
-<h3 id="52-pendingphototarget">5.2 PendingPhotoTarget </h3>
-<table>
+<p>現場アプリでは、写真は同期済みの出荷実績を選択して登録する。</p>
+<p>対象の出荷実績がクラウドにまだ同期されておらず、出荷実績一覧または出荷実績詳細に表示されていない場合、予定・車番・時刻などを使って写真だけを先にクラウド保存する機能は実装しない。</p>
+<p>この場合は、ユーザーに同期待ちであることを表示し、出荷実績の再取得を促す。Sync Agent が次回同期で出荷実績をクラウドへ反映した後、ユーザーが対象出荷を選択して通常の写真追加を行う。</p>
+<h3 id="52-画面表示">5.2 画面表示 </h3>
+<p>出荷予定詳細画面で対象の出荷実績がまだ表示されていない場合、写真追加ボタンは表示しない、または非活性にする。</p>
+<p>表示例:</p>
+<pre data-role="codeBlock" data-info="text" class="language-text text"><code>出荷実績がまだ同期されていません。
+しばらく待ってから更新してください。
+
+[出荷実績を更新]
+</code></pre><table>
 <thead>
 <tr>
-<th>項目</th>
-<th>型</th>
-<th>説明</th>
+<th>状態</th>
+<th>処理</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>pending_photo_target_id</code></td>
-<td>uuid</td>
-<td>仮紐づけ ID。</td>
+<td>出荷予定は表示されているが出荷実績がない</td>
+<td>写真追加は開始しない。出荷実績の更新を促す。</td>
 </tr>
 <tr>
-<td><code>tenant_id</code></td>
-<td>uuid</td>
-<td>テナント ID。</td>
+<td>出荷実績一覧に対象出荷が表示された</td>
+<td>通常の出荷実績詳細から写真追加を許可する。</td>
 </tr>
 <tr>
-<td><code>plant_id</code></td>
-<td>uuid / string</td>
-<td>工場 ID。</td>
+<td>更新しても長時間表示されない</td>
+<td>Sync Agent の稼働状況、ローカルDB接続、出荷実績同期ログを確認する。</td>
 </tr>
 <tr>
-<td><code>shipping_schedule_id</code></td>
-<td>uuid null</td>
-<td>クラウド予定 ID。</td>
-</tr>
-<tr>
-<td><code>schedule_source_local_id</code></td>
-<td>uniqueidentifier / string</td>
-<td>ローカル <code>yotei_id</code>。</td>
-</tr>
-<tr>
-<td><code>shipping_date</code></td>
-<td>date</td>
-<td>出荷日。</td>
-</tr>
-<tr>
-<td><code>vehicle_no</code></td>
-<td>nvarchar</td>
-<td>車番。</td>
-</tr>
-<tr>
-<td><code>shipping_time_hint</code></td>
-<td>time null</td>
-<td>出荷時刻候補。</td>
-</tr>
-<tr>
-<td><code>photo_asset_id</code></td>
-<td>uuid</td>
-<td>写真 ID。</td>
-</tr>
-<tr>
-<td><code>resolve_status</code></td>
-<td>nvarchar</td>
-<td><code>pending</code> / <code>resolved</code> / <code>ambiguous</code> / <code>failed</code>。</td>
-</tr>
-<tr>
-<td><code>resolved_shipment_id</code></td>
-<td>uuid null</td>
-<td>解決後の <code>Shipment.shipment_id</code>。</td>
-</tr>
-<tr>
-<td><code>resolved_syukka_id</code></td>
-<td>uniqueidentifier / string null</td>
-<td>解決後の <code>SyukkaDataMain.syukka_id</code>。</td>
-</tr>
-<tr>
-<td><code>created_by</code></td>
-<td>uuid</td>
-<td>登録者。</td>
-</tr>
-<tr>
-<td><code>created_at</code></td>
-<td>datetimeoffset</td>
-<td>作成日時。</td>
-</tr>
-<tr>
-<td><code>resolved_at</code></td>
-<td>datetimeoffset null</td>
-<td>解決日時。</td>
+<td>通信断</td>
+<td>出荷実績の再取得は行えない。通信復旧後に再取得する。</td>
 </tr>
 </tbody>
 </table>
-<h3 id="53-解決ルール">5.3 解決ルール </h3>
-<p>推奨解決条件は次の通り。</p>
-<pre data-role="codeBlock" data-info="text" class="language-text text"><code>tenant_id
-+ plant_id
-+ shipping_date
-+ schedule_source_local_id
-+ vehicle_no
-+ shipping_time_hint 近傍
-</code></pre><p>一致候補が 1 件の場合は <code>resolved</code> とし、<code>PhotoAssetTarget</code> を <code>target_type = shipment</code> で作成する。</p>
-<p>候補が複数ある場合は <code>ambiguous</code> とし、管理画面または Sync Agent ログで確認対象にする。</p>
-<h3 id="54-labonity-側候補表示">5.4 Labonity 側候補表示 </h3>
-<p>Labonity 側の写真候補表示は、正式に <code>Shipment</code> へ解決された写真を対象とする。仮写真のままの写真は、誤紐づけ防止のため TP採取結果入力画面の OCR 候補には出さない。</p>
+<h3 id="53-データ保存ルール">5.3 データ保存ルール </h3>
+<p>出荷実績が表示されていない状態では、クラウド DB に写真メタデータを作成しない。Blob Storage への写真アップロードセッションも発行しない。</p>
+<p>写真アップロードセッション発行と写真 commit は、必ず同期済みの <code>Shipment.shipment_id</code> を指定して行う。</p>
+<h3 id="54-実装対象外">5.4 実装対象外 </h3>
+<p>初回リリースでは、次の機能は実装しない。</p>
+<ul>
+<li>予定のみを対象に写真をクラウドへ保存する機能。</li>
+<li>車番・時刻・予定情報から出荷実績へ写真を自動紐づけする機能。</li>
+<li>出荷実績同期後に写真の対象を自動変更する機能。</li>
+<li>未紐づけ写真を管理者が手動で出荷実績へ紐づけ直す管理機能。</li>
+</ul>
 <hr>
 <h2 id="6-写真保存設計">6. 写真保存設計 </h2>
 <h3 id="61-基本方針">6.1 基本方針 </h3>
@@ -1644,7 +1577,7 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
 </code></pre><hr>
 <h2 id="8-photoreferenceevent-設計">8. PhotoReferenceEvent 設計 </h2>
 <h3 id="81-基本方針">8.1 基本方針 </h3>
-<p>クラウド側で写真の作成、削除、代表写真変更、表示順変更、対象解決が発生した場合、<code>PhotoReferenceEvent</code> を発行する。Sync Agent はイベントを取得し、<code>FieldPhotoReference</code> へ反映する。</p>
+<p>クラウド側で写真の作成、削除、代表写真変更、表示順変更が発生した場合、<code>PhotoReferenceEvent</code> を発行する。Sync Agent はイベントを取得し、<code>FieldPhotoReference</code> へ反映する。</p>
 <h3 id="82-イベント項目">8.2 イベント項目 </h3>
 <table>
 <thead>
@@ -1672,7 +1605,7 @@ TP採取結果の正式保存は Labonity の通常保存処理で行う。
 </tr>
 <tr>
 <td><code>event_type</code></td>
-<td><code>created</code> / <code>updated</code> / <code>deleted</code> / <code>primary_changed</code> / <code>display_order_changed</code> / <code>target_resolved</code>。</td>
+<td><code>created</code> / <code>updated</code> / <code>deleted</code> / <code>primary_changed</code> / <code>display_order_changed</code>。</td>
 </tr>
 <tr>
 <td><code>photo_asset_id</code></td>
@@ -2477,8 +2410,6 @@ POST /api/sync/v1/orgs/{orgId}/shipment-tp-targets/import
 </code></pre><h4 id="写真メタデータイベント取得">写真メタデータイベント取得 </h4>
 <pre data-role="codeBlock" data-info="http" class="language-http http"><code>GET /api/sync/v1/orgs/{orgId}/photo-reference-events?plantId={plantId}&amp;sinceSequence={sequence}
 POST /api/sync/v1/orgs/{orgId}/photo-reference-events/{eventId}/ack
-</code></pre><h4 id="仮写真解決">仮写真解決 </h4>
-<pre data-role="codeBlock" data-info="http" class="language-http http"><code>POST /api/sync/v1/orgs/{orgId}/pending-photo-targets/resolve
 </code></pre><h3 id="123-現場アプリ-api">12.3 現場アプリ API </h3>
 <h4 id="出荷予定一覧">出荷予定一覧 </h4>
 <pre data-role="codeBlock" data-info="http" class="language-http http"><code>GET /api/core/v1/orgs/{orgId}/shipping-schedules?date=2026-06-10&amp;plantId={plantId}
@@ -2568,9 +2499,9 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 </code></pre><hr>
 <h2 id="13-画面仕様--現場アプリ">13. 画面仕様 / 現場アプリ </h2>
 <h3 id="131-ログイン画面">13.1 ログイン画面 </h3>
-<p><img src="UI/13_1_%E3%83%AD%E3%82%B0%E3%82%A4%E3%83%B3%E7%94%BB%E9%9D%A2.png" alt="ログイン画面" width="360"></p>
+<img src="UI/13_1_ログイン画面.png" alt="ログイン画面" width="360">
 <h3 id="132-出荷予定一覧画面">13.2 出荷予定一覧画面 </h3>
-<p><img src="UI/13_2_%E5%87%BA%E8%8D%B7%E4%BA%88%E5%AE%9A%E4%B8%80%E8%A6%A7%E7%94%BB%E9%9D%A2.png" alt="出荷予定一覧画面" width="360"></p>
+<img src="UI/13_2_出荷予定一覧画面.png" alt="出荷予定一覧画面" width="360">
 <ul>
 <li>ヘッダーに「出荷予定一覧」タイトルと更新ボタンを配置する。</li>
 <li>日付ピッカーと検索バー（現場名・予定Noで検索）を上部に表示する。</li>
@@ -2579,16 +2510,16 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 <li>カード下部に「開く」ボタンを配置し、出荷予定詳細へ遷移する。</li>
 </ul>
 <h3 id="133-出荷予定詳細--出荷実績一覧画面">13.3 出荷予定詳細 / 出荷実績一覧画面 </h3>
-<p><img src="UI/13_3_%E5%87%BA%E8%8D%B7%E4%BA%88%E5%AE%9A%E8%A9%B3%E7%B4%B0_%E5%87%BA%E8%8D%B7%E5%AE%9F%E7%B8%BE%E4%B8%80%E8%A6%A7%E7%94%BB%E9%9D%A2.png" alt="出荷予定詳細 / 出荷実績一覧画面" width="360"></p>
+<img src="UI/13_3_出荷予定詳細_出荷実績一覧画面.png" alt="出荷予定詳細 / 出荷実績一覧画面" width="360">
 <ul>
 <li>上部に予定詳細（現場名、予定No、配合、出荷予定日）をカード形式で表示する。</li>
 <li>現場住所セクションに住所テキスト、「地図を開く」「ナビ開始」ボタンを配置する。</li>
 <li>「出荷実績」セクションに各実績行を表示する。</li>
-<li>実績行には、出荷時刻、同期状態バッジ（送信済 / 未登録）、車番、数量、写真枚数を表示する。</li>
+<li>実績行には、出荷時刻、車番、数量、写真枚数を表示する。</li>
 <li>各行の「開く」ボタンから出荷実績詳細へ遷移する。</li>
 </ul>
 <h3 id="134-出荷実績詳細画面">13.4 出荷実績詳細画面 </h3>
-<p><img src="UI/13_4_%E5%87%BA%E8%8D%B7%E5%AE%9F%E7%B8%BE%E8%A9%B3%E7%B4%B0%E7%94%BB%E9%9D%A2.png" alt="出荷実績詳細画面" width="360"></p>
+<img src="UI/13_4_出荷実績詳細画面.png" alt="出荷実績詳細画面" width="360">
 <ul>
 <li>現場名をヘッダー下に大きく表示する。</li>
 <li>「出荷情報」カードに出荷時刻、車番、数量、配合を表示する。</li>
@@ -2597,7 +2528,7 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 <li>画面下部に「写真を追加」（プライマリボタン）と「写真一覧を見る」（セカンダリボタン）を配置する。</li>
 </ul>
 <h3 id="135-写真追加メニュー">13.5 写真追加メニュー </h3>
-<p><img src="UI/13_5_%E5%86%99%E7%9C%9F%E8%BF%BD%E5%8A%A0%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC.png" alt="写真追加メニュー" width="360"></p>
+<img src="UI/13_5_写真追加メニュー.png" alt="写真追加メニュー" width="360">
 <ul>
 <li>ボトムシート形式で「写真を追加」メニューを表示する。</li>
 <li>対象出荷（出荷時刻 / 車番）を上部に表示する。</li>
@@ -2606,7 +2537,7 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 <li>「キャンセル」ボタンでメニューを閉じる。</li>
 </ul>
 <h3 id="136-写真確認画面">13.6 写真確認画面 </h3>
-<p><img src="UI/13_6_%E5%86%99%E7%9C%9F%E7%A2%BA%E8%AA%8D%E7%94%BB%E9%9D%A2.png" alt="写真確認画面" width="360"></p>
+<img src="UI/13_6_写真確認画面.png" alt="写真確認画面" width="360">
 <ul>
 <li>対象出荷（出荷時刻 / 車番）を上部に表示する。</li>
 <li>写真プレビューを中央に大きく表示する。</li>
@@ -2616,7 +2547,7 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 <li>「保存する」（プライマリボタン）、「撮り直す」「写真を選び直す」（セカンダリボタン）を配置する。</li>
 </ul>
 <h3 id="137-写真一覧画面">13.7 写真一覧画面 </h3>
-<p><img src="UI/13_7_%E5%86%99%E7%9C%9F%E4%B8%80%E8%A6%A7%E7%94%BB%E9%9D%A2.png" alt="写真一覧画面" width="360"></p>
+<img src="UI/13_7_写真一覧画面.png" alt="写真一覧画面" width="360">
 <ul>
 <li>対象出荷（出荷時刻 / 車番）を上部に表示する。</li>
 <li>写真カードを縦並びで表示し、各カードにサムネイル、撮影日時、「代表にする」「削除」ボタンを配置する。</li>
@@ -2624,7 +2555,7 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 <li>画面下部に「保存する」（プライマリボタン）と「写真を追加」（セカンダリボタン）を配置する。</li>
 </ul>
 <h3 id="138-保存完了画面">13.8 保存完了画面 </h3>
-<p><img src="UI/13_8_%E4%BF%9D%E5%AD%98%E5%AE%8C%E4%BA%86%E7%94%BB%E9%9D%A2.png" alt="保存完了画面" width="360"></p>
+<img src="UI/13_8_保存完了画面.png" alt="保存完了画面" width="360">
 <ul>
 <li>保存成功を示すチェックマークアイコンとメッセージを表示する。</li>
 <li>対象の出荷実績（出荷時刻、車番）を表示する。</li>
@@ -2799,11 +2730,7 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 </tr>
 <tr>
 <td>出荷実績が端末にない</td>
-<td>予定から仮写真を追加できる。ただし Labonity 側候補表示は解決後とする。</td>
-</tr>
-<tr>
-<td>仮写真が解決不能</td>
-<td>管理ログに表示し、手動確認対象にする。</td>
+<td>出荷実績一覧を更新し、対象出荷が表示されるまで写真追加を開始しない。</td>
 </tr>
 <tr>
 <td>トークン期限切れ</td>
@@ -3057,7 +2984,7 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 </tr>
 <tr>
 <td>A-39</td>
-<td>出荷実績がクラウド未同期の場合、仮写真として登録でき、出荷実績同期後に解決される。</td>
+<td>対象出荷が現場アプリに表示されない場合、写真追加は開始できず、出荷実績の更新案内を表示できる。</td>
 </tr>
 <tr>
 <td>A-40</td>
@@ -3085,7 +3012,7 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 <li>PhotoAsset / PhotoAssetTarget を保存する。</li>
 <li>写真メタデータは PhotoReferenceEvent としてクラウド側に記録する。</li>
 <li>Sync Agent は PhotoReferenceEvent を pull し、FieldPhotoReference へ反映する。</li>
-<li>出荷実績未同期時の仮写真登録と解決処理を実装する。</li>
+<li>対象出荷が表示されない場合、写真追加を開始せず、出荷実績の更新案内を表示する。</li>
 <li>出荷実績詳細画面に [写真を追加] を配置する。</li>
 <li>出荷実績詳細画面に [地図を開く] [ナビ開始] を配置する。</li>
 <li>Google Maps 起動 URL は緯度経度を優先し、なければ住所文字列で生成する。</li>
@@ -3100,6 +3027,8 @@ GET /api/core/v1/orgs/{orgId}/shipments/by-source/{syukkaId}/photos?plantId={pla
 <li>現場アプリでの電子黒板合成。</li>
 <li>現場アプリでの黒板レイアウト編集。</li>
 <li>現場アプリでの写真分類入力。</li>
+<li>出荷実績が表示されていない状態での写真先行登録。</li>
+<li>予定・車番・時刻から出荷実績へ写真を自動紐づけする機能。</li>
 <li>現場アプリからの出荷予定・出荷実績・現場マスター編集。</li>
 <li>写真本体のローカルDB保存。</li>
 <li>クラウドからローカルDBへの直接接続。</li>
