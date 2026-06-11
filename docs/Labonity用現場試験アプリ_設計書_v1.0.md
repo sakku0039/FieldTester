@@ -1401,11 +1401,11 @@ POST /api/core/v1/orgs/{orgId}/ocr/blackboard-import-jobs/{jobId}/apply
 
 ### 13.1 ログイン画面
 
-![ログイン画面](UI/13_1_ログイン画面.png)
+<img src="UI/13_1_ログイン画面.png" alt="ログイン画面" width="360">
 
 ### 13.2 出荷予定一覧画面
 
-![出荷予定一覧画面](UI/13_2_出荷予定一覧画面.png)
+<img src="UI/13_2_出荷予定一覧画面.png" alt="出荷予定一覧画面" width="360">
 
 - ヘッダーに「出荷予定一覧」タイトルと更新ボタンを配置する。
 - 日付ピッカーと検索バー（現場名・予定Noで検索）を上部に表示する。
@@ -1415,7 +1415,7 @@ POST /api/core/v1/orgs/{orgId}/ocr/blackboard-import-jobs/{jobId}/apply
 
 ### 13.3 出荷予定詳細 / 出荷実績一覧画面
 
-![出荷予定詳細 / 出荷実績一覧画面](UI/13_3_出荷予定詳細_出荷実績一覧画面.png)
+<img src="UI/13_3_出荷予定詳細_出荷実績一覧画面.png" alt="出荷予定詳細 / 出荷実績一覧画面" width="360">
 
 - 上部に予定詳細（現場名、予定No、配合、出荷予定日）をカード形式で表示する。
 - 現場住所セクションに住所テキスト、「地図を開く」「ナビ開始」ボタンを配置する。
@@ -1425,7 +1425,7 @@ POST /api/core/v1/orgs/{orgId}/ocr/blackboard-import-jobs/{jobId}/apply
 
 ### 13.4 出荷実績詳細画面
 
-![出荷実績詳細画面](UI/13_4_出荷実績詳細画面.png)
+<img src="UI/13_4_出荷実績詳細画面.png" alt="出荷実績詳細画面" width="360">
 
 - 現場名をヘッダー下に大きく表示する。
 - 「出荷情報」カードに出荷時刻、車番、数量、配合を表示する。
@@ -1435,7 +1435,7 @@ POST /api/core/v1/orgs/{orgId}/ocr/blackboard-import-jobs/{jobId}/apply
 
 ### 13.5 写真追加メニュー
 
-![写真追加メニュー](UI/13_5_写真追加メニュー.png)
+<img src="UI/13_5_写真追加メニュー.png" alt="写真追加メニュー" width="360">
 
 - ボトムシート形式で「写真を追加」メニューを表示する。
 - 対象出荷（出荷時刻 / 車番）を上部に表示する。
@@ -1445,7 +1445,7 @@ POST /api/core/v1/orgs/{orgId}/ocr/blackboard-import-jobs/{jobId}/apply
 
 ### 13.6 写真確認画面
 
-![写真確認画面](UI/13_6_写真確認画面.png)
+<img src="UI/13_6_写真確認画面.png" alt="写真確認画面" width="360">
 
 - 対象出荷（出荷時刻 / 車番）を上部に表示する。
 - 写真プレビューを中央に大きく表示する。
@@ -1456,7 +1456,7 @@ POST /api/core/v1/orgs/{orgId}/ocr/blackboard-import-jobs/{jobId}/apply
 
 ### 13.7 写真一覧画面
 
-![写真一覧画面](UI/13_7_写真一覧画面.png)
+<img src="UI/13_7_写真一覧画面.png" alt="写真一覧画面" width="360">
 
 - 対象出荷（出荷時刻 / 車番）を上部に表示する。
 - 写真カードを縦並びで表示し、各カードにサムネイル、撮影日時、「代表にする」「削除」ボタンを配置する。
@@ -1465,7 +1465,7 @@ POST /api/core/v1/orgs/{orgId}/ocr/blackboard-import-jobs/{jobId}/apply
 
 ### 13.8 保存完了画面
 
-![保存完了画面](UI/13_8_保存完了画面.png)
+<img src="UI/13_8_保存完了画面.png" alt="保存完了画面" width="360">
 
 - 保存成功を示すチェックマークアイコンとメッセージを表示する。
 - 対象の出荷実績（出荷時刻、車番）を表示する。
