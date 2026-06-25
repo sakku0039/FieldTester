@@ -1,10 +1,8 @@
 {
   "document_set": "現場試験アプリ 設計資料一式",
-  "version": "第2.2版",
-  "package_variant": "完成版・Markdown対応",
-  "generated_at_utc": "2026-06-23T03:17:05.580824+00:00",
+  "version": "第2.2版",`r`n  "generated_at_utc": "2026-06-23T03:17:05.580824+00:00",
   "format_policy": {
-    "Markdown": [
+    "documents": [
       "資料体系・レビューガイド",
       "要件定義書",
       "基本設計書",
@@ -24,8 +22,8 @@
       "json": "機械判読用検証結果"
     }
   },
-  "source_markdown": {
-    "filename": "Labonity用現場試験アプリ_設計書_v2.0_完成版.md",
+  "source_document": {
+    "filename": "Labonity用現場試験アプリ_設計書_v2.0.md",
     "line_count": 4247,
     "heading_count": 228,
     "top_level_chapters": [
