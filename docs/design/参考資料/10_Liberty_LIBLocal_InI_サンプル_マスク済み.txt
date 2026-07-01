@@ -1,0 +1,9 @@
+[端末設定]
+サーバーパス=<SERVER_FOLDER_PATH>
+[テキストモード]
+入力モード=1
+InpHighLight=1
+端末使用担当者CD=<OPERATOR_CODE>
+[印刷]
+プリンター標準=<PRINTER_NAME>
+プリンター縮小=<PRINTER_NAME>

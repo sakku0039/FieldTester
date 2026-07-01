@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<BasicDatabase xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <p_SQLプロバイダー名>SQLOLEDB</p_SQLプロバイダー名>
+  <p_SQLサーバー名>&lt;SQL_SERVER_NAME&gt;</p_SQLサーバー名>
+  <p_SQLユーザーID>&lt;SQL_USER&gt;</p_SQLユーザーID>
+  <p_SQLパスワード>&lt;SQL_PASSWORD&gt;</p_SQLパスワード>
+  <p_マスターデータベース名>MSDAT</p_マスターデータベース名>
+  <p_出荷管理データベース名>NADAT</p_出荷管理データベース名>
+  <p_品質管理データベース名>EXDAT</p_品質管理データベース名>
+  <p_共通設定データベース名>LIBERTYSETTINGS</p_共通設定データベース名>
+</BasicDatabase>

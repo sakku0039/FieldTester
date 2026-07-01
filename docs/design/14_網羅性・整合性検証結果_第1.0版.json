@@ -1,0 +1,121 @@
+{
+  "overall": "PASS",
+  "checks": [
+    {
+      "name": "必須成果物",
+      "passed": true,
+      "detail": "23/23 files present"
+    },
+    {
+      "name": "SQL Server名空欄エラー",
+      "passed": true,
+      "detail": "CFG-DB-001 and no-fallback rule found"
+    },
+    {
+      "name": "FieldTest固定",
+      "passed": true,
+      "detail": "Fixed FieldTest schema rule found"
+    },
+    {
+      "name": "品質DB非使用",
+      "passed": true,
+      "detail": "Quality DB excluded from v1 OCR sync"
+    },
+    {
+      "name": "Labonity対応表",
+      "passed": true,
+      "detail": "Labonity mapping file exists"
+    },
+    {
+      "name": "同期API契約",
+      "passed": true,
+      "detail": "API catalog present"
+    },
+    {
+      "name": "Provider参照View",
+      "passed": true,
+      "detail": "Provider app views defined"
+    },
+    {
+      "name": "Migration/Lease詳細",
+      "passed": true,
+      "detail": "Migration and lease procedure defined"
+    },
+    {
+      "name": "SQL:V001_CoreSchema",
+      "passed": true,
+      "detail": "V001_CoreSchema"
+    },
+    {
+      "name": "SQL:V002_EventQueuesAndIndexes",
+      "passed": true,
+      "detail": "V002_EventQueuesAndIndexes"
+    },
+    {
+      "name": "SQL:V003_ProviderAppViews",
+      "passed": true,
+      "detail": "V003_ProviderAppViews"
+    },
+    {
+      "name": "SQL:V004_AgentLeaseProcedures",
+      "passed": true,
+      "detail": "V004_AgentLeaseProcedures"
+    },
+    {
+      "name": "SQL:FieldTest.InboundEvent",
+      "passed": true,
+      "detail": "FieldTest.InboundEvent"
+    },
+    {
+      "name": "SQL:source_result_key_hash_sha256",
+      "passed": true,
+      "detail": "source_result_key_hash_sha256"
+    },
+    {
+      "name": "SQL:UX_FieldTestTestPhoto_ResultKindHash",
+      "passed": true,
+      "detail": "UX_FieldTestTestPhoto_ResultKindHash"
+    },
+    {
+      "name": "SQL:CK_FieldTestTestPhoto_location",
+      "passed": true,
+      "detail": "CK_FieldTestTestPhoto_location"
+    },
+    {
+      "name": "SQL:usp_AcquireAgentLease",
+      "passed": true,
+      "detail": "usp_AcquireAgentLease"
+    },
+    {
+      "name": "SQL:UPDLOCK, HOLDLOCK",
+      "passed": true,
+      "detail": "UPDLOCK, HOLDLOCK"
+    },
+    {
+      "name": "JSON例のWindowsパス未エスケープ",
+      "passed": true,
+      "detail": "not found"
+    },
+    {
+      "name": "fieldTestSchemaName設定項目",
+      "passed": true,
+      "detail": "not found"
+    },
+    {
+      "name": "source_result_key NULL旧DDL",
+      "passed": true,
+      "detail": "not found"
+    },
+    {
+      "name": "ゼロchecksum旧DDL",
+      "passed": true,
+      "detail": "not found"
+    },
+    {
+      "name": "PPTレンダリング",
+      "passed": true,
+      "detail": "12 slide PNGs"
+    }
+  ],
+  "note": "実DB適用試験、実API結合試験、Providerアプリ画面表示試験は実装後に実施する。"
+}
